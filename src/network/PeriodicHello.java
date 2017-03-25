@@ -15,7 +15,7 @@ import user.MessageUser;
 public class PeriodicHello extends Thread {
 	
 	private MulticastSocket mS;
- 
+
 	private ObjectOutputStream ooStream;
 
 	private ByteArrayOutputStream baoStream;	

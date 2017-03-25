@@ -18,7 +18,7 @@ import com.sun.xml.internal.ws.client.SenderException;
 public class Subscribe {
 	
 	private MulticastSocket mS;
-	 
+	
 	private InetAddress group;
 
 	private int port;

@@ -15,7 +15,7 @@ import user.MessageUser;
 
 public class HelloReceptionThread extends Thread{
 
-	 
+	
 	private MulticastSocket mS;
 	
 	private MessageUser msgUser;

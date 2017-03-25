@@ -18,7 +18,7 @@ import network.HelloReceptionThread;
 public class UsersWindow extends JFrame {
 	
 	private DefaultListModel<String> list;
-	
+	 
 	private JList jlist;
 	
 	private JButton bDisconnect;

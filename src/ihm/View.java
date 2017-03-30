@@ -11,6 +11,7 @@ public class View {
 	private ArrayList<InBox> inBoxList;
 	
 	public View(){
+		this.inBoxList = new ArrayList<InBox>();
 		this.cW = new ConnectionWindow();
 	}
 	

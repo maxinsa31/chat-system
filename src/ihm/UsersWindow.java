@@ -13,11 +13,10 @@ import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import network.HelloReceptionThread;
+import model.HelloReceptionThread;
+import model.Subscribe;
 
-public class UsersWindow extends JFrame {
-	
-	private DefaultListModel<String> list;
+public class UsersWindow extends JFrame implements Observer {
 	
 	private JList jlist;
 	
@@ -25,33 +24,21 @@ public class UsersWindow extends JFrame {
 	
 	private ArrayList<InBox> inBoxList;
 	
-	private HelloReceptionThread hRT;
+	private DefaultListModel<String> listModel;;
 	
-	public UsersWindow(MulticastSocket mS){
-		list = new DefaultListModel<String>();
-		jlist = new JList(list);
-		hRT = new HelloReceptionThread(list,mS);
+	public UsersWindow(){
+		listModel = new DefaultListModel<String>();
+		jlist = new JList(listModel);
 		bDisconnect = new JButton("Disconnect");
 		this.inBoxList = new ArrayList<InBox>();
 		initComponents();
 	}
-	
-	private InBox exist(String title){
-		for( InBox i : this.inBoxList){
-			if (i.getTitle().equals(title)){
-				return i;
-			}
-		}
-		return null;
-	}
-	
-	
-	
+		
 	
 	private void initComponents(){
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setTitle("ChatSystem");
-		/* centre la fenï¿½tre */
+		/* centre la fenetre */
 		this.setLocationRelativeTo(null);
 				
 		
@@ -61,22 +48,25 @@ public class UsersWindow extends JFrame {
 		
 		/* ajustement des composants dans la fenetre */
 		this.pack();
-		/* fenï¿½tre visible */
+		
+		/* fenetre visible */
 		this.setSize(200, 400);
 		this.setVisible(true);
 		
-		bDisconnect.addActionListener(new ActionListener() {
+		/*bDisconnect.addActionListener(new ActionListener() {
 			
 			
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				/////////////////////////////////////////////////////TODO Couper le periodicHello
+				 fermeture de la fenêtre de la liste d'utilisateur 
 				dispose();
+				 coupe le PeriodicHello 
+				s.getPeriodicHello().cancelPeriodicHello();
+				 ouverture d'une nouvelle fenêtre de connexion 
 				new ConnectionWindow();
 			}
-		});
+		});*/
 		
-		jlist.addListSelectionListener(new ListSelectionListener() {
+		/*jlist.addListSelectionListener(new ListSelectionListener() {
 			
 			
 			public void valueChanged(ListSelectionEvent e) {
@@ -92,6 +82,29 @@ public class UsersWindow extends JFrame {
 					}
 				}
 			}
-		});
+		});*/
+	}
+	
+	
+	public JButton getbDisconnect() {
+		return bDisconnect;
+	}
+	
+	public JList getjList(){
+		return jlist;
+	}
+	
+	public ArrayList<InBox> getInBoxList(){
+		return inBoxList;
+	}
+
+
+	public void update(String name, int rank) {
+		if(rank == -1){
+			listModel.addElement(name);
+		} else{
+			listModel.remove(rank);
+		}
+		
 	}
 }

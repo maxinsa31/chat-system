@@ -1,4 +1,4 @@
-package network;
+package model;
 
 import java.awt.TrayIcon.MessageType;
 import java.io.ByteArrayOutputStream;
@@ -22,15 +22,13 @@ public class Subscribe {
 	private InetAddress group;
 
 	private int port;
+
+	private PeriodicHello periodicHello;
 	
 	public Subscribe(){
-		//creerNotreMessage(adresse Ip...)
-		//abonnerMulticast
-		//balancerLesMessages
-		//se mettre à l'écoute via thread
 		this.port = 5002;		
 		this.subscribeMulticast();
-		new PeriodicHello(this.mS,this.group,this.port);
+		this.periodicHello = new PeriodicHello(this.mS,this.group,this.port);
 	}
 
 	private void subscribeMulticast(){
@@ -51,6 +49,9 @@ public class Subscribe {
 		return mS;
 	}
 
+	public PeriodicHello getPeriodicHello(){
+		return this.periodicHello;
+	}
 	
 	
 }

@@ -1,14 +1,22 @@
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import ihm.ConnectionWindow;
+import controller.Controller;
+import ihm.View;
 
 public class launchChatSystem {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("Bienvenue dans notre chat system");
-		new ConnectionWindow();
+		
+		/* Vue */
+		View view = new View();
+		
+		/* Controller */
+		Controller controller = new Controller(view);
+		
+		/* Ajout des actionListener de la vue */
+		view.getConnectionWindow().getbConnection().addActionListener(controller);
+		
+		
 
 	}
 

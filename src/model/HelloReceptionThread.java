@@ -1,4 +1,4 @@
-package network;
+package model;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -10,21 +10,26 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 
+import ihm.Observer;
 import user.MessageUser;
 
 
-public class HelloReceptionThread extends Thread{
-
+public class HelloReceptionThread extends Thread implements Observable {
 	
 	private MulticastSocket mS;
 	
 	private MessageUser msgUser;
 	
-	private DefaultListModel<String> list;
+	private ArrayList<String> list;
 	
-	public HelloReceptionThread(DefaultListModel<String> list, MulticastSocket mS){
-		this.list = list;
+	private boolean execute;
+	
+	private Observer obs;
+	
+	public HelloReceptionThread(MulticastSocket mS){
+		this.list = new ArrayList<String>();
 		this.mS = mS;
+		this.execute = true;
 		this.start();
 	}
 	
@@ -33,7 +38,7 @@ public class HelloReceptionThread extends Thread{
 	}
 	
 	public void run(){
-		while(true){
+		while(execute){
 			byte[] rcvBuf = new byte[5000];
 			DatagramPacket packet = new DatagramPacket(rcvBuf, rcvBuf.length);
 			try {
@@ -47,11 +52,14 @@ public class HelloReceptionThread extends Thread{
 			try {
 				oIS = new ObjectInputStream(new BufferedInputStream(byteStream));
 				msgUser = (MessageUser)oIS.readObject();
-				
-				if(rankUser(msgUser) == -1 && !msgUser.getPseudo().equals("MaxX0u_du_31")){
-					this.list.addElement(msgUser.getPseudo());
+				int rank = rankUser(msgUser);
+				if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals("MaxX0u_du_31")){
+					this.list.add(msgUser.getPseudo());
+					notifyObservers(msgUser.getPseudo(), rank);
+				} else if (msgUser.getEtat() == MessageUser.typeConnect.DECONNECTED && rank != -1){
+						this.list.remove(rank);
+						notifyObservers(msgUser.getPseudo(), rank);
 				}
-				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -62,5 +70,19 @@ public class HelloReceptionThread extends Thread{
 		}
 	}
 	
+	public void setExecute(boolean execute){
+		this.execute = execute;
+	}
 	
+	public void cancelHelloReceptionThread(){
+		this.setExecute(false);
+	}
+
+	public void addObserver(Observer obs) {
+		this.obs = obs;
+	}
+
+	public void notifyObservers(String name, int rank) {
+		obs.update(name, rank);
+	}
 }

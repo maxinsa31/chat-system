@@ -4,13 +4,17 @@ import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 public class ConnectionWindow extends JFrame{
 	
 	private JButton bConnection;
 	
+	private JTextArea login;
+	
 	public ConnectionWindow(){
 		bConnection = new JButton("Connection");
+		login = new JTextArea(1, 20);
 		initComponents();
 	}
 	
@@ -23,6 +27,7 @@ public class ConnectionWindow extends JFrame{
 		
 		/* ajout des composants */
 		this.add(bConnection,BorderLayout.SOUTH);
+		this.add(login,BorderLayout.NORTH);
 		
 		/* ajustement des composants dans la fenetre */
 		this.pack();
@@ -33,6 +38,10 @@ public class ConnectionWindow extends JFrame{
 
 	public JButton getbConnection() {
 		return bConnection;
+	}
+	
+	public String getLogin(){
+		return this.login.getText();
 	}
 
 }

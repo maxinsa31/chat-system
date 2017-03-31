@@ -26,10 +26,13 @@ public class HelloReceptionThread extends Thread implements Observable {
 	
 	private Observer obs;
 	
-	public HelloReceptionThread(MulticastSocket mS){
+	private String login;
+	
+	public HelloReceptionThread(MulticastSocket mS, String login){
 		this.list = new ArrayList<String>();
 		this.mS = mS;
 		this.execute = true;
+		this.login = login;
 		this.start();
 	}
 	
@@ -44,7 +47,6 @@ public class HelloReceptionThread extends Thread implements Observable {
 			try {
 				mS.receive(packet);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			ByteArrayInputStream byteStream = new ByteArrayInputStream(rcvBuf);
@@ -53,7 +55,7 @@ public class HelloReceptionThread extends Thread implements Observable {
 				oIS = new ObjectInputStream(new BufferedInputStream(byteStream));
 				msgUser = (MessageUser)oIS.readObject();
 				int rank = rankUser(msgUser);
-				if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals("MaxX0u_du_31")){
+				if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals(this.login)){
 					this.list.add(msgUser.getPseudo());
 					notifyObservers(msgUser.getPseudo(), rank);
 				} else if (msgUser.getEtat() == MessageUser.typeConnect.DECONNECTED && rank != -1){
@@ -61,10 +63,8 @@ public class HelloReceptionThread extends Thread implements Observable {
 						notifyObservers(msgUser.getPseudo(), rank);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

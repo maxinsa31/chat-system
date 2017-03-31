@@ -25,10 +25,13 @@ public class Subscribe {
 
 	private PeriodicHello periodicHello;
 	
-	public Subscribe(){
+	private String login;
+	
+	public Subscribe(String login){
 		this.port = 5002;		
 		this.subscribeMulticast();
-		this.periodicHello = new PeriodicHello(this.mS,this.group,this.port);
+		this.login = login;
+		this.periodicHello = new PeriodicHello(this.mS,this.group,this.port,this.login);
 	}
 
 	private void subscribeMulticast(){

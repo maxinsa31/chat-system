@@ -28,13 +28,16 @@ public class PeriodicHello extends Thread {
 	
 	private boolean execute;
 	
-	public PeriodicHello(MulticastSocket mS,InetAddress group, int port){
+	private String login;
+	
+	public PeriodicHello(MulticastSocket mS,InetAddress group, int port, String login){
 		this.mS = mS;
 		this.port = port;
 		this.group = group;
 		this.execute = true;
+		this.login = login;
 		try {
-			this.hello = new MessageUser("MaxX0u_du_31", InetAddress.getLocalHost(), port, MessageUser.typeConnect.CONNECTED);
+			this.hello = new MessageUser(this.login, InetAddress.getLocalHost(), port, MessageUser.typeConnect.CONNECTED);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,7 +80,7 @@ public class PeriodicHello extends Thread {
 		 * 		-> il faut donc envoyer un message d'indication de déconnexion
 		 */
 		try {
-	 		MessageUser goodBye = new MessageUser("MaxX0u_du_31", InetAddress.getLocalHost(), port, MessageUser.typeConnect.DECONNECTED);
+	 		MessageUser goodBye = new MessageUser(this.login, InetAddress.getLocalHost(), port, MessageUser.typeConnect.DECONNECTED);
 	 		this.ooStream.writeObject(goodBye);
 	 		DatagramPacket dPacket = new DatagramPacket(this.baoStream.toByteArray(), this.baoStream.toByteArray().length, this.group, this.port);
 	 		mS.send(dPacket);

@@ -31,9 +31,12 @@ public class Controller implements ActionListener, ListSelectionListener {
 			this.view.getUsersWindow().getbDisconnect().addActionListener(this);
 			this.view.getUsersWindow().getjList().addListSelectionListener(this);
 			
+			/* Login à enregistrer */
+			String login = this.view.getConnectionWindow().getLogin();
+			
 			/* On declenche les actions au niveau du réseau */
-			this.subscriber = new Subscribe();
-			this.helloReceptionThread = new HelloReceptionThread(subscriber.getmS());
+			this.subscriber = new Subscribe(login);
+			this.helloReceptionThread = new HelloReceptionThread(subscriber.getmS(),login);
 			
 			/* ajout de la UsersWindow comme observer du modele */
 			this.helloReceptionThread.addObserver(view.getUsersWindow());

@@ -10,8 +10,6 @@ import java.awt.event.WindowListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class InBox extends JFrame implements WindowListener{
 
@@ -34,7 +32,7 @@ public class InBox extends JFrame implements WindowListener{
 	
 	private void initComponents(){
 		this.setTitle(title);
-		/* centre la fen�tre */
+		/* centre la fenetre */
 		this.setLocationRelativeTo(null);
 		
 		discussion.setEditable(false);
@@ -46,14 +44,14 @@ public class InBox extends JFrame implements WindowListener{
 		
 		/* ajustement des composants dans la fenetre */
 		this.pack();
-		/* fen�tre visible */
+		/* fenetre visible */
 		this.setSize(400, 300);
 		this.setVisible(true);
 		
 		bSend.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				/* envoyer le message via le r�seau */
+				/* envoyer le message via le reseau */
 			}
 		});
 		
@@ -61,37 +59,30 @@ public class InBox extends JFrame implements WindowListener{
 	}
 
 	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void windowClosed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void windowClosing(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		this.setVisible(false);
 	}
 
 	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 }

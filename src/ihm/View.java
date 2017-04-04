@@ -10,8 +10,13 @@ public class View {
 	
 	private ArrayList<InBox> inBoxList;
 	
+	private ArrayList<GroupBox> groupBoxList;
+	
+	private GroupSelectionWindow groupSelectionWindow;
+	
 	public View(){
 		this.inBoxList = new ArrayList<InBox>();
+		this.groupBoxList = new ArrayList<GroupBox>();
 		this.cW = new ConnectionWindow();
 	}
 	
@@ -50,7 +55,16 @@ public class View {
 		return null;
 	}
 	
+	public void openGroupSelectionWindow(){
+		groupSelectionWindow = new GroupSelectionWindow(this.uW.getListModel());
+	}
 	
+	public void openGroupConversation(){
+		this.groupSelectionWindow.dispose();
+
+		//TODO : verifier que le groupe n'existe pas deja
+		groupBoxList.add(new GroupBox("", this.groupSelectionWindow.getUsers()));
+	}
 	
 	
 	public ConnectionWindow getConnectionWindow(){
@@ -59,5 +73,9 @@ public class View {
 	
 	public UsersWindow getUsersWindow(){
 		return this.uW;
+	}
+	
+	public GroupSelectionWindow getGroupSelectionWindow(){
+		return this.groupSelectionWindow;
 	}
 }

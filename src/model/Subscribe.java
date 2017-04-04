@@ -1,18 +1,10 @@
 package model;
 
-import java.awt.TrayIcon.MessageType;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 
-import user.MessageUser;
-
-import com.sun.xml.internal.ws.client.SenderException;
 
 
 public class Subscribe {
@@ -40,10 +32,8 @@ public class Subscribe {
 			this.mS = new MulticastSocket(this.port);
 			this.mS.joinGroup(group);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

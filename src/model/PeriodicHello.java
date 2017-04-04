@@ -8,8 +8,6 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 
-import javax.swing.DefaultListModel;
-
 import user.MessageUser;
 
 public class PeriodicHello extends Thread {
@@ -39,20 +37,18 @@ public class PeriodicHello extends Thread {
 		try {
 			this.hello = new MessageUser(this.login, InetAddress.getLocalHost(), port, MessageUser.typeConnect.CONNECTED);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.baoStream = new ByteArrayOutputStream();
 		try {
 			this.ooStream = new ObjectOutputStream(baoStream);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.start();
 	}
 	
-	
+	//TODO : fixer bug envoi du même message quelquesoit le message ecrit sur l'ObjectOutputStream
 	public void run(){
 		/* boucle tant que la variable 'execute' n'est pas modifiée par la classe UsersWindow */
 		while(execute){
@@ -66,13 +62,11 @@ public class PeriodicHello extends Thread {
 				mS.send(dPacket);
 				System.out.println("Hello envoyé");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
 				Thread.sleep(2000l);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

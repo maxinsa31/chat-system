@@ -8,8 +8,6 @@ import java.net.DatagramPacket;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
 
-import javax.swing.DefaultListModel;
-
 import ihm.Observer;
 import user.MessageUser;
 

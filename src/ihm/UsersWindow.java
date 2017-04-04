@@ -1,20 +1,14 @@
 package ihm;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.MulticastSocket;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import model.HelloReceptionThread;
-import model.Subscribe;
+import javax.swing.JPanel;
 
 public class UsersWindow extends JFrame implements Observer {
 	
@@ -22,14 +16,17 @@ public class UsersWindow extends JFrame implements Observer {
 	
 	private JButton bDisconnect;
 	
+	private JButton bCreateAGroup;
+	
 	private ArrayList<InBox> inBoxList;
 	
-	private DefaultListModel<String> listModel;;
+	private DefaultListModel<String> listModel;
 	
 	public UsersWindow(){
 		listModel = new DefaultListModel<String>();
 		jlist = new JList(listModel);
 		bDisconnect = new JButton("Disconnect");
+		bCreateAGroup = new JButton("Create a group");
 		this.inBoxList = new ArrayList<InBox>();
 		initComponents();
 	}
@@ -40,58 +37,46 @@ public class UsersWindow extends JFrame implements Observer {
 		this.setTitle("ChatSystem");
 		/* centre la fenetre */
 		this.setLocationRelativeTo(null);
+		
+		this.setLayout(new BorderLayout());
+		
+		JPanel pan = new JPanel(new GridLayout(7,1));
+		pan.add(bCreateAGroup);
+		
 				
 		
 		/* ajout des composants */
+		this.add(jlist,BorderLayout.CENTER);
 		this.add(bDisconnect,BorderLayout.SOUTH);
-		this.add(jlist);
+		this.add(pan, BorderLayout.EAST);
+	
 		
 		/* ajustement des composants dans la fenetre */
 		this.pack();
 		
 		/* fenetre visible */
-		this.setSize(200, 400);
-		this.setVisible(true);
+		this.setSize(400, 400);
+		this.setVisible(true);		
 		
-		/*bDisconnect.addActionListener(new ActionListener() {
-			
-			
-			public void actionPerformed(ActionEvent e) {
-				 fermeture de la fenêtre de la liste d'utilisateur 
-				dispose();
-				 coupe le PeriodicHello 
-				s.getPeriodicHello().cancelPeriodicHello();
-				 ouverture d'une nouvelle fenêtre de connexion 
-				new ConnectionWindow();
-			}
-		});*/
-		
-		/*jlist.addListSelectionListener(new ListSelectionListener() {
-			
-			
-			public void valueChanged(ListSelectionEvent e) {
-				// TODO Auto-generated method stub
-				if (! e.getValueIsAdjusting()){
-					InBox i = exist((String)jlist.getSelectedValue());
-					if( i == null ){ 
-						System.out.println("Creation fenetre");
-						inBoxList.add(new InBox((String)jlist.getSelectedValue()));
-					}else{
-						System.out.println("SetVisible = true ");
-						i.setVisible(true);
-					}
-				}
-			}
-		});*/
 	}
 	
+	
+
 	
 	public JButton getbDisconnect() {
 		return bDisconnect;
 	}
 	
+	public JButton getbCreateAGroup(){
+		return bCreateAGroup;
+	}
+	
 	public JList getjList(){
 		return jlist;
+	}
+	
+	public DefaultListModel<String> getListModel(){
+		return listModel;
 	}
 	
 	public ArrayList<InBox> getInBoxList(){

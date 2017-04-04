@@ -23,13 +23,14 @@ public class Controller implements ActionListener, ListSelectionListener {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		if(arg0.getSource().equals(this.view.getConnectionWindow().getbConnection())){
+		if(arg0.getSource().equals(this.view.getConnectionWindow().getbConnection())){ /* Appui bouton connexion */
 			
 			this.view.connection();
 			
 			/* ajout des listeners de la vue */
 			this.view.getUsersWindow().getbDisconnect().addActionListener(this);
 			this.view.getUsersWindow().getjList().addListSelectionListener(this);
+			this.view.getUsersWindow().getbCreateAGroup().addActionListener(this);
 			
 			/* Login à enregistrer */
 			String login = this.view.getConnectionWindow().getLogin();
@@ -41,7 +42,7 @@ public class Controller implements ActionListener, ListSelectionListener {
 			/* ajout de la UsersWindow comme observer du modele */
 			this.helloReceptionThread.addObserver(view.getUsersWindow());
 			
-		}else if(arg0.getSource().equals(this.view.getUsersWindow().getbDisconnect())){
+		}else if(arg0.getSource().equals(this.view.getUsersWindow().getbDisconnect())){ /* Appui bouton deconnexion */
 			
 			this.view.disconnection();
 			
@@ -50,7 +51,19 @@ public class Controller implements ActionListener, ListSelectionListener {
 			/* on arrête l'ecoute de messages hello */
 			this.helloReceptionThread.cancelHelloReceptionThread();
 			
+		} else if(arg0.getSource().equals(view.getUsersWindow().getbCreateAGroup())){ /* Appui bouton creation de groupe */
+			
+			this.view.openGroupSelectionWindow();
+			
+			/* Ajout du listener pour le bouton Terminer */
+			this.view.getGroupSelectionWindow().getbFinish().addActionListener(this);
+			
+		} else if(arg0.getSource().equals(view.getGroupSelectionWindow().getbFinish())){ /* Appui bouton Terminer creation de groupe */
+			
+			this.view.openGroupConversation();
+			
 		}
+		
 	}
 
 	public void valueChanged(ListSelectionEvent e) {

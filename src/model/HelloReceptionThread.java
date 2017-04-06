@@ -34,37 +34,43 @@ public class HelloReceptionThread extends Thread implements Observable {
 		this.start();
 	}
 	
-	private int rankUser(MessageUser m){
+	private int rankUser(MessageUser m){ /* retourne -1 sur le pseudo n'existe pas dans la liste */
 		return list.indexOf(m.getPseudo());
 	}
 	
 	public void run(){
 		while(execute){
-			byte[] rcvBuf = new byte[5000];
-			DatagramPacket packet = new DatagramPacket(rcvBuf, rcvBuf.length);
-			try {
-				mS.receive(packet);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			ByteArrayInputStream byteStream = new ByteArrayInputStream(rcvBuf);
-			ObjectInputStream oIS;
-			try {
-				oIS = new ObjectInputStream(new BufferedInputStream(byteStream));
-				msgUser = (MessageUser)oIS.readObject();
-				int rank = rankUser(msgUser);
-				if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals(this.login)){
-					this.list.add(msgUser.getPseudo());
+			
+			receiveMyObject();
+			
+			int rank = rankUser(msgUser);
+			
+			if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals(this.login)){
+				
+				this.list.add(msgUser.getPseudo());
+				notifyObservers(msgUser.getPseudo(), rank);
+				
+			} else if (msgUser.getEtat() == MessageUser.typeConnect.DECONNECTED && rank != -1){
+				
+					this.list.remove(rank);
 					notifyObservers(msgUser.getPseudo(), rank);
-				} else if (msgUser.getEtat() == MessageUser.typeConnect.DECONNECTED && rank != -1){
-						this.list.remove(rank);
-						notifyObservers(msgUser.getPseudo(), rank);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
 			}
+		}
+	}
+	
+	public void receiveMyObject(){
+		byte [] receiveBuf = new byte[5000];
+		DatagramPacket packet = new DatagramPacket(receiveBuf, receiveBuf.length);
+		try {
+			mS.receive(packet);
+			ByteArrayInputStream byteStream = new ByteArrayInputStream(receiveBuf);
+			ObjectInputStream oIS = new ObjectInputStream(new BufferedInputStream(byteStream));
+			this.msgUser = (MessageUser) oIS.readObject();
+			oIS.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 	

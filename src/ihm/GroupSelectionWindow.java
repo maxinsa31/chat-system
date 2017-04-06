@@ -1,6 +1,5 @@
 package ihm;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
 import javax.swing.DefaultListModel;
@@ -33,6 +32,16 @@ public class GroupSelectionWindow extends JFrame{
 		this.setTitle("Selection of users");
 		this.pack();
 		this.setVisible(true);
+	}
+	
+	public boolean possibleToCreate(){
+		int cpt=0;
+		for(JCheckBox cB : users){
+			if(cB.isSelected()){
+				cpt++;
+			}
+		}
+		return (cpt>=2);
 	}
 	
 	public JButton getbFinish(){

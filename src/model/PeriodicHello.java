@@ -1,5 +1,6 @@
 package model;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -12,11 +13,7 @@ import user.MessageUser;
 
 public class PeriodicHello extends Thread {
 	
-	private MulticastSocket mS;
-
-	private ObjectOutputStream ooStream;
-
-	private ByteArrayOutputStream baoStream;	
+	private MulticastSocket mS;	
 
 	private MessageUser hello;
 	
@@ -39,31 +36,15 @@ public class PeriodicHello extends Thread {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		this.baoStream = new ByteArrayOutputStream();
-		try {
-			this.ooStream = new ObjectOutputStream(baoStream);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		this.start();
 	}
 	
-	//TODO : fixer bug envoi du même message quelquesoit le message ecrit sur l'ObjectOutputStream
+	
 	public void run(){
 		/* boucle tant que la variable 'execute' n'est pas modifiée par la classe UsersWindow */
 		while(execute){
-			try {
-				this.ooStream.writeObject(this.hello);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			DatagramPacket dPacket = new DatagramPacket(this.baoStream.toByteArray(), this.baoStream.toByteArray().length, this.group, this.port);
-			try {
-				mS.send(dPacket);
-				System.out.println("Hello envoyé");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			sendMyObject(hello);
+			System.out.println("Message je suis connecte");
 			try {
 				Thread.sleep(2000l);
 			} catch (InterruptedException e) {
@@ -74,17 +55,31 @@ public class PeriodicHello extends Thread {
 		 * 		-> il faut donc envoyer un message d'indication de déconnexion
 		 */
 		try {
-	 		MessageUser goodBye = new MessageUser(this.login, InetAddress.getLocalHost(), port, MessageUser.typeConnect.DECONNECTED);
-	 		this.ooStream.writeObject(goodBye);
-	 		DatagramPacket dPacket = new DatagramPacket(this.baoStream.toByteArray(), this.baoStream.toByteArray().length, this.group, this.port);
-	 		mS.send(dPacket);
-	 		System.out.println("Good bye envoyé");
-	 	} catch (UnknownHostException e) {
-	 		e.printStackTrace();
-	 	} catch (IOException e) {
-	 		e.printStackTrace();
+			MessageUser goodBye = new MessageUser(this.login, InetAddress.getLocalHost(), port, MessageUser.typeConnect.DECONNECTED);
+			sendMyObject(goodBye);
+			System.out.println("Message deconnexion");
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
+		
 		 
+	}
+	
+	private void sendMyObject(MessageUser m){
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		try {
+			ObjectOutputStream oOS = new ObjectOutputStream(new BufferedOutputStream(byteStream));
+			oOS.flush();
+			oOS.writeObject(m);
+			oOS.flush();
+			byte[] sendBuf = byteStream.toByteArray();
+			DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length,this.group,this.port);
+			mS.send(packet);
+			oOS.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private void setExecute(boolean execute){

@@ -37,10 +37,8 @@ public class View {
 	public void openConversation(){
 		InBox i = findConversation((String)uW.getjList().getSelectedValue());
 		if( i == null ){ 
-			System.out.println("Creation fenetre");
 			inBoxList.add(new InBox((String)uW.getjList().getSelectedValue()));
 		}else{
-			System.out.println("SetVisible = true ");
 			i.setVisible(true);
 		}
 	}
@@ -60,10 +58,32 @@ public class View {
 	}
 	
 	public void openGroupConversation(){
-		this.groupSelectionWindow.dispose();
-
-		//TODO : verifier que le groupe n'existe pas deja
-		groupBoxList.add(new GroupBox("", this.groupSelectionWindow.getUsers()));
+		
+		if(this.groupSelectionWindow.possibleToCreate()){ /* si au moins 2 utilisateurs ont été selectionnes */
+			
+			/* fermeture de la fenetre de selection des membres */
+			this.groupSelectionWindow.dispose();
+	
+			GroupBox selected = new GroupBox("", this.groupSelectionWindow.getUsers());
+			boolean exists = false;
+			/* verification de la non existence de ce groupe */
+			for(GroupBox gB : groupBoxList){
+				if(selected.isTheSame(gB)){ /* le groupe existe deja donc on ne fait que faire reapparaitre la conversation de groupe */
+					selected.dispose();
+					gB.setVisible(true);
+					exists = true;
+				}
+			}
+			if(!exists){ /* le groupe n'existe pas donc on le cree*/
+				groupBoxList.add(selected);
+				selected.setVisible(true);
+			}
+			
+		} else{
+			// TODO : ouverture d'une fenetre d'erreur pour indiquer que le nombre de destinataires doit etre superieur à 2 
+		}
+		
+		
 	}
 	
 	

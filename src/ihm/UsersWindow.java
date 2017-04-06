@@ -22,7 +22,7 @@ public class UsersWindow extends JFrame implements Observer {
 	
 	private DefaultListModel<String> listModel;
 	
-	public UsersWindow(){
+	public UsersWindow(){ 
 		listModel = new DefaultListModel<String>();
 		jlist = new JList(listModel);
 		bDisconnect = new JButton("Disconnect");

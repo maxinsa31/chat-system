@@ -2,16 +2,11 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.InetAddress;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import ihm.InBox;
 import ihm.View;
-import model.CommunicationServer;
-import model.CommunicationSocket;
 import model.HelloReceptionThread;
 import model.Subscribe;
 
@@ -22,8 +17,6 @@ public class Controller implements ActionListener, ListSelectionListener {
 	private Subscribe subscriber;
 	
 	private HelloReceptionThread helloReceptionThread;
-	
-	private CommunicationServer commServer;
 	
 	public Controller(View view){
 		this.view = view;
@@ -48,9 +41,6 @@ public class Controller implements ActionListener, ListSelectionListener {
 			
 			/* ajout de la UsersWindow comme observer du modele */
 			this.helloReceptionThread.addObserver(view.getUsersWindow());
-			
-			/* lancement du serveur d'écoute de demande de connexion TCP pour communiquer */
-			commServer = new CommunicationServer();
 			
 		}else if(arg0.getSource().equals(this.view.getUsersWindow().getbDisconnect())){ /* Appui bouton deconnexion */
 			
@@ -78,42 +68,9 @@ public class Controller implements ActionListener, ListSelectionListener {
 
 	public void valueChanged(ListSelectionEvent e) {
 		if (! e.getValueIsAdjusting()){
-			InBox iB = view.findConversation((String)view.getUsersWindow().getjList().getSelectedValue());
 			
-			/* ouverture de la fenetre de conversation */
-			final InBox i = view.openConversation();
+			view.openConversation();
 			
-			
-			/* variables intermediaires relatives a la fenetre de conversation */
-			String pseudo = i.getTitle();
-			final InetAddress ipAddress = helloReceptionThread.getIpAddressOf(pseudo);
-			final boolean isServer = commServer.socketServerExists(ipAddress);
-			
-			/* si ni un socket serveur ni un socket client est ouvert : on cree un socket client (CommunicationClient) */
-			//TODO : lors du merge, fusionner les conditions (ajout de la condition sur l'existence d'un socket client pour ce pseudo)
-			if(ipAddress != null && !isServer){
-				//TODO : creer socket client
-			}
-			
-			/* ajout de l'action listener pour le bouton bSend s'il n'a jamais ete ajoute */
-			if(iB == null){
-				i.getbSend().addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(isServer){
-							CommunicationSocket socket = commServer.findCommunicationSocket(ipAddress);
-							if(socket != null){
-								try {
-									socket.getBuffWrite().write(i.getTextToSend());
-								} catch (IOException e1) {
-									e1.printStackTrace();
-								}
-							}
-						} else{
-							//TODO : trouver et utiliser socket client
-						}
-					}
-				});
-			}
 		}	
 	}
 

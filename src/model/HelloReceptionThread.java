@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
-import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
 
@@ -19,7 +18,7 @@ public class HelloReceptionThread extends Thread implements Observable {
 	
 	private MessageUser msgUser;
 	
-	private ArrayList<Receiver> list;
+	private ArrayList<String> list;
 	
 	private boolean execute;
 	
@@ -28,23 +27,15 @@ public class HelloReceptionThread extends Thread implements Observable {
 	private String login;
 	
 	public HelloReceptionThread(MulticastSocket mS, String login){
-		this.list = new ArrayList<Receiver>();
+		this.list = new ArrayList<String>();
 		this.mS = mS;
 		this.execute = true;
 		this.login = login;
 		this.start();
 	}
 	
-	private int rankUser(String pseudo){ /* retourne -1 si le pseudo n'existe pas dans la liste */
-		int rank = 0;
-		for(Receiver R : this.list){
-			if(R.getPseudo().equals(pseudo)){
-				return rank;
-			}else{
-				rank ++;
-			}
-		}
-		return -1;
+	private int rankUser(MessageUser m){ /* retourne -1 sur le pseudo n'existe pas dans la liste */
+		return list.indexOf(m.getPseudo());
 	}
 	
 	public void run(){
@@ -52,11 +43,11 @@ public class HelloReceptionThread extends Thread implements Observable {
 			
 			receiveMyObject();
 			
-			int rank = rankUser(msgUser.getPseudo());
+			int rank = rankUser(msgUser);
 			
 			if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals(this.login)){
 				
-				this.list.add(new Receiver(msgUser.getIP(),msgUser.getPseudo()));
+				this.list.add(msgUser.getPseudo());
 				notifyObservers(msgUser.getPseudo(), rank);
 				
 			} else if (msgUser.getEtat() == MessageUser.typeConnect.DECONNECTED && rank != -1){
@@ -64,15 +55,6 @@ public class HelloReceptionThread extends Thread implements Observable {
 					this.list.remove(rank);
 					notifyObservers(msgUser.getPseudo(), rank);
 			}
-		}
-	}
-	
-	public InetAddress getIpAddressOf(String pseudo){
-		int rank = rankUser(pseudo);
-		if(rank != -1){
-			return list.get(rank).getIP();
-		} else{
-			return null;
 		}
 	}
 	

@@ -48,15 +48,14 @@ public class InBox extends JFrame implements WindowListener{
 		this.setSize(400, 300);
 		this.setVisible(true);
 		
+		bSend.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				/* envoyer le message via le reseau */
+			}
+		});
 		
-	}
-	
-	public JButton getbSend(){
-		return bSend;
-	}
-	
-	public String getTextToSend(){
-		return textToSend.getText();
+		
 	}
 
 	public void windowActivated(WindowEvent arg0) {

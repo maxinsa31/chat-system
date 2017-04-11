@@ -34,12 +34,15 @@ public class View {
 		this.cW.setVisible(true);
 	}
 	
-	public void openConversation(){
+	public InBox openConversation(){
 		InBox i = findConversation((String)uW.getjList().getSelectedValue());
 		if( i == null ){ 
-			inBoxList.add(new InBox((String)uW.getjList().getSelectedValue()));
+			InBox created = new InBox((String)uW.getjList().getSelectedValue());
+			inBoxList.add(created);
+			return created;
 		}else{
 			i.setVisible(true);
+			return i;
 		}
 	}
 	

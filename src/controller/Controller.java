@@ -81,8 +81,6 @@ public class Controller implements ActionListener, ListSelectionListener {
 			
 			this.view.openGroupConversation();
 			
-		}else { /* Appui sur bSend depuis une fenêtre InBox*/
-					
 		}
 		
 	}

@@ -69,6 +69,8 @@ public class Controller implements ActionListener, ListSelectionListener {
 			this.subscriber.getPeriodicHello().cancelPeriodicHello();
 			/* on arrête l'ecoute de messages hello */
 			this.helloReceptionThread.cancelHelloReceptionThread();
+			/* on coupe le serveur d'ecoute de demande de connexion TCP */
+			this.commServer.cancelCommunicationServer();
 			
 		} else if(arg0.getSource().equals(view.getUsersWindow().getbCreateAGroup())){ /* Appui bouton creation de groupe */
 			

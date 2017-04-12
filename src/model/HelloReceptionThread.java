@@ -65,6 +65,7 @@ public class HelloReceptionThread extends Thread implements Observable {
 					notifyObservers(msgUser.getPseudo(), rank);
 			}
 		}
+		System.out.println("Fermeture helloReceptionThread");
 	}
 	
 	public InetAddress getIpAddressOf(String pseudo){

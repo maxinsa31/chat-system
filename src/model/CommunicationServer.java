@@ -39,9 +39,10 @@ public class CommunicationServer extends Thread {
 				Socket communicationSocket = this.waitForConnectionSocket.accept();
 				socketList.add(new CommunicationSocket(communicationSocket));				
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("(CommunicationServer) Fermeture du socket du serveur d'ecoute");
 			}
 		}
+		System.out.println("(CommunicationServer) Fermeture du serveur d'ecoute de demande connexion TCP");
 	}
 	
 	public boolean socketServerExists(InetAddress ipAddress){
@@ -66,8 +67,13 @@ public class CommunicationServer extends Thread {
 		this.execute = execute;
 	}
 	
-	/* appeler cette methode lorsqu' il y a deconnexion ? */
+	/* methode appelee lorsqu' il y a deconnexion  */
 	public void cancelCommunicationServer(){
 		this.setExecute(false);
+		try {
+			this.waitForConnectionSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

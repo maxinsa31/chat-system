@@ -54,8 +54,12 @@ public class Controller implements ActionListener, ListSelectionListener {
 			/* ajout de la UsersWindow comme observer du modele */
 			this.helloReceptionThread.addObserver(view.getUsersWindow());
 			
+			/* creation de la classe qui stocke l'ensemble des CommunicationClient que l'on est */
+			clients = new Clients();
+			
 			/* lancement du serveur d'écoute de demande de connexion TCP pour communiquer */
 			commServer = new CommunicationServer();
+			
 			
 		}else if(arg0.getSource().equals(this.view.getUsersWindow().getbDisconnect())){ /* Appui bouton deconnexion */
 			
@@ -100,7 +104,7 @@ public class Controller implements ActionListener, ListSelectionListener {
 			/* si ni un socket serveur ni un socket client est ouvert : on cree un socket client (CommunicationClient) */
 			if(ipAddress != null && !isServer && !isClient){
 				try {
-					clients.addClient(new CommunicationClient(ipAddress, 50644));
+					clients.addClient(new CommunicationClient(ipAddress, 50643));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} 
@@ -110,11 +114,13 @@ public class Controller implements ActionListener, ListSelectionListener {
 			if(iB == null){
 				i.getbSend().addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						System.out.println("Appui sur le bouton send");
 						if(isServer){
 							CommunicationSocket socket = commServer.findCommunicationSocket(ipAddress);
 							if(socket != null){
 								try {
 									socket.getBuffWrite().write(i.getTextToSend());
+									System.out.println("(Server):j'envoi le messgae : "+i.getTextToSend());
 								} catch (IOException e1) {
 									e1.printStackTrace();
 								}
@@ -124,6 +130,7 @@ public class Controller implements ActionListener, ListSelectionListener {
 							if(socket != null){
 								try{
 									socket.getBuffWrite().write(i.getTextToSend());
+									System.out.println("(Client):j'envoi le messgae : "+i.getTextToSend());
 								} catch (IOException e1) {
 									e1.printStackTrace();
 								}		

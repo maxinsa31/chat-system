@@ -35,6 +35,7 @@ public class HelloReceptionThread extends Thread implements Observable {
 		this.start();
 	}
 	
+
 	private int rankUser(String pseudo){ /* retourne -1 si le pseudo n'existe pas dans la liste */
 		int rank = 0;
 		for(Receiver R : this.list){
@@ -49,7 +50,6 @@ public class HelloReceptionThread extends Thread implements Observable {
 	
 	public void run(){
 		while(execute){
-			
 			receiveMyObject();
 			
 			int rank = rankUser(msgUser.getPseudo());
@@ -107,4 +107,9 @@ public class HelloReceptionThread extends Thread implements Observable {
 	public void notifyObservers(String name, int rank) {
 		obs.update(name, rank);
 	}
+
+	public MessageUser getMsgUser() {
+		return msgUser;
+	}
+	
 }

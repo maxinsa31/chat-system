@@ -51,12 +51,17 @@ public class InBox extends JFrame implements WindowListener{
 		
 	}
 	
-	public JButton getbSend(){
-		return bSend;
-	}
-	
 	public String getTextToSend(){
 		return textToSend.getText();
+	}
+
+	
+	public JButton getbSend() {
+		return bSend;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 	public void windowActivated(WindowEvent arg0) {

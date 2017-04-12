@@ -11,6 +11,8 @@ import javax.swing.event.ListSelectionListener;
 import ihm.InBox;
 import ihm.View;
 import model.CommunicationServer;
+import model.Clients;
+import model.CommunicationClient;
 import model.CommunicationSocket;
 import model.HelloReceptionThread;
 import model.Subscribe;
@@ -25,11 +27,16 @@ public class Controller implements ActionListener, ListSelectionListener {
 	
 	private CommunicationServer commServer;
 	
+	private Clients clients;
+	
+	
 	public Controller(View view){
 		this.view = view;
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		/* Login à enregistrer */
+		String login = this.view.getConnectionWindow().getLogin();
 		if(arg0.getSource().equals(this.view.getConnectionWindow().getbConnection())){ /* Appui bouton connexion */
 			
 			this.view.connection();
@@ -39,8 +46,6 @@ public class Controller implements ActionListener, ListSelectionListener {
 			this.view.getUsersWindow().getjList().addListSelectionListener(this);
 			this.view.getUsersWindow().getbCreateAGroup().addActionListener(this);
 			
-			/* Login à enregistrer */
-			String login = this.view.getConnectionWindow().getLogin();
 			
 			/* On declenche les actions au niveau du réseau */
 			this.subscriber = new Subscribe(login);
@@ -72,6 +77,8 @@ public class Controller implements ActionListener, ListSelectionListener {
 			
 			this.view.openGroupConversation();
 			
+		}else { /* Appui sur bSend depuis une fenêtre InBox*/
+					
 		}
 		
 	}
@@ -88,11 +95,15 @@ public class Controller implements ActionListener, ListSelectionListener {
 			String pseudo = i.getTitle();
 			final InetAddress ipAddress = helloReceptionThread.getIpAddressOf(pseudo);
 			final boolean isServer = commServer.socketServerExists(ipAddress);
+			final boolean isClient = clients.socketClientExists(ipAddress); 
 			
 			/* si ni un socket serveur ni un socket client est ouvert : on cree un socket client (CommunicationClient) */
-			//TODO : lors du merge, fusionner les conditions (ajout de la condition sur l'existence d'un socket client pour ce pseudo)
-			if(ipAddress != null && !isServer){
-				//TODO : creer socket client
+			if(ipAddress != null && !isServer && !isClient){
+				try {
+					clients.addClient(new CommunicationClient(ipAddress, 50644));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} 
 			}
 			
 			/* ajout de l'action listener pour le bouton bSend s'il n'a jamais ete ajoute */
@@ -108,13 +119,21 @@ public class Controller implements ActionListener, ListSelectionListener {
 									e1.printStackTrace();
 								}
 							}
-						} else{
-							//TODO : trouver et utiliser socket client
+						} else{ //isClient						
+							CommunicationSocket socket = clients.findCommunicationSocket(ipAddress);
+							if(socket != null){
+								try{
+									socket.getBuffWrite().write(i.getTextToSend());
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}		
+							}
+							 
 						}
 					}
 				});
 			}
 		}	
 	}
-
 }
+

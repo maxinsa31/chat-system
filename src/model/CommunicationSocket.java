@@ -39,4 +39,9 @@ public class CommunicationSocket {
 	public BufferedWriter getBuffWrite(){
 		return buffWrite;
 	}
+	
+	public Socket getSocket(){
+		return this.socket;
+	}
 }
+

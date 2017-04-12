@@ -2,11 +2,17 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import ihm.InBox;
 import ihm.View;
+import model.Clients;
+import model.CommunicationClient;
+import model.CommunicationSocket;
 import model.HelloReceptionThread;
 import model.Subscribe;
 
@@ -18,11 +24,15 @@ public class Controller implements ActionListener, ListSelectionListener {
 	
 	private HelloReceptionThread helloReceptionThread;
 	
+	private Clients clients;
+	
 	public Controller(View view){
 		this.view = view;
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		/* Login à enregistrer */
+		String login = this.view.getConnectionWindow().getLogin();
 		if(arg0.getSource().equals(this.view.getConnectionWindow().getbConnection())){ /* Appui bouton connexion */
 			
 			this.view.connection();
@@ -32,8 +42,6 @@ public class Controller implements ActionListener, ListSelectionListener {
 			this.view.getUsersWindow().getjList().addListSelectionListener(this);
 			this.view.getUsersWindow().getbCreateAGroup().addActionListener(this);
 			
-			/* Login à enregistrer */
-			String login = this.view.getConnectionWindow().getLogin();
 			
 			/* On declenche les actions au niveau du réseau */
 			this.subscriber = new Subscribe(login);
@@ -62,16 +70,40 @@ public class Controller implements ActionListener, ListSelectionListener {
 			
 			this.view.openGroupConversation();
 			
+		}else { /* Appui sur bSend depuis une fenêtre InBox*/
+					
 		}
 		
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
-		if (! e.getValueIsAdjusting()){
+		if (!e.getValueIsAdjusting()){
+			InBox iB = view.findConversation((String)view.getUsersWindow().getjList().getSelectedValue());
 			
-			view.openConversation();
+			final InBox i = view.openConversation();
 			
+			String pseudo = i.getTitle();
+			/*final InetAddress ipAddress = helloReceptionThread.getIpAddressOf(pseudo);
+			final boolean isServer = commServer.socketServerExists(ipAddress);
+			final boolean isClient = clients.socketClientExists(ipAddress); 
+			if(ipAddress != null && !isServer && !isClient){
+				clients.addClient(new CommunicationClient(ipAddress, port)); //un port au lieu de 53000
+			}
+			
+			//ton code */
+			
+			//}else{ //isClient
+				//utiliser socket client
+				/*CommunicationSocket socket = clients.findCommunicationSocket(ipAddress);
+				if(socket != null){
+					try{
+						socket.getBuffWrite().write(i.getTextToSend());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}		
+				}
+				 */
+			}	
 		}	
 	}
 
-}

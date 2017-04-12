@@ -18,7 +18,9 @@ public class HelloReceptionThread extends Thread implements Observable {
 	
 	private MessageUser msgUser;
 	
-	private ArrayList<String> list;
+	private ArrayList<Receiver> list;
+	
+	private ArrayList<String> listPseudo;
 	
 	private boolean execute;
 	
@@ -27,32 +29,35 @@ public class HelloReceptionThread extends Thread implements Observable {
 	private String login;
 	
 	public HelloReceptionThread(MulticastSocket mS, String login){
-		this.list = new ArrayList<String>();
+		this.list = new ArrayList<Receiver>();
+		this.listPseudo = new ArrayList<String>();
 		this.mS = mS;
 		this.execute = true;
 		this.login = login;
 		this.start();
 	}
 	
+	
 	private int rankUser(MessageUser m){ /* retourne -1 sur le pseudo n'existe pas dans la liste */
-		return list.indexOf(m.getPseudo());
+		return listPseudo.indexOf(m.getPseudo());
 	}
 	
 	public void run(){
 		while(execute){
-			
 			receiveMyObject();
-			
 			int rank = rankUser(msgUser);
 			
 			if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals(this.login)){
 				
-				this.list.add(msgUser.getPseudo());
+				this.listPseudo.add(msgUser.getPseudo());
+				this.list.add(new Receiver(msgUser.getIP(),msgUser.getPseudo()));		
+				System.out.println("Receiver ajoute !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				notifyObservers(msgUser.getPseudo(), rank);
 				
 			} else if (msgUser.getEtat() == MessageUser.typeConnect.DECONNECTED && rank != -1){
 				
 					this.list.remove(rank);
+					this.listPseudo.remove(rank);
 					notifyObservers(msgUser.getPseudo(), rank);
 			}
 		}
@@ -89,4 +94,9 @@ public class HelloReceptionThread extends Thread implements Observable {
 	public void notifyObservers(String name, int rank) {
 		obs.update(name, rank);
 	}
+
+	public MessageUser getMsgUser() {
+		return msgUser;
+	}
+	
 }

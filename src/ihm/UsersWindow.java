@@ -18,8 +18,6 @@ public class UsersWindow extends JFrame implements Observer {
 	
 	private JButton bCreateAGroup;
 	
-	private ArrayList<InBox> inBoxList;
-	
 	private DefaultListModel<String> listModel;
 	
 	public UsersWindow(){
@@ -27,7 +25,6 @@ public class UsersWindow extends JFrame implements Observer {
 		jlist = new JList(listModel);
 		bDisconnect = new JButton("Disconnect");
 		bCreateAGroup = new JButton("Create a group");
-		this.inBoxList = new ArrayList<InBox>();
 		initComponents();
 	}
 		
@@ -78,11 +75,6 @@ public class UsersWindow extends JFrame implements Observer {
 	public DefaultListModel<String> getListModel(){
 		return listModel;
 	}
-	
-	public ArrayList<InBox> getInBoxList(){
-		return inBoxList;
-	}
-
 
 	public void update(String name, int rank) {
 		if(rank == -1){

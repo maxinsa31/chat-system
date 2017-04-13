@@ -6,12 +6,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Observable;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-public class InBox extends JFrame implements WindowListener{
+import model.ObjectRead;
+
+public class InBox extends JFrame implements WindowListener, java.util.Observer{
 
 	private String title;
 	
@@ -47,8 +50,6 @@ public class InBox extends JFrame implements WindowListener{
 		/* fenetre visible */
 		this.setSize(400, 300);
 		this.setVisible(true);
-		
-		
 	}
 	
 	public String getTextToSend(){
@@ -63,6 +64,17 @@ public class InBox extends JFrame implements WindowListener{
 	public String getTitle() {
 		return title;
 	}
+	
+	public void windowClosing(WindowEvent arg0) {
+		this.setVisible(false);
+	}
+	
+	public void update(Observable o, Object arg) {
+		System.out.println("(InBox) update execute ");
+		if(arg instanceof ObjectRead){
+			this.discussion.setText(((ObjectRead) arg).getText());
+		}
+	}
 
 	public void windowActivated(WindowEvent arg0) {
 		
@@ -70,10 +82,6 @@ public class InBox extends JFrame implements WindowListener{
 
 	public void windowClosed(WindowEvent arg0) {
 		
-	}
-
-	public void windowClosing(WindowEvent arg0) {
-		this.setVisible(false);
 	}
 
 	public void windowDeactivated(WindowEvent arg0) {

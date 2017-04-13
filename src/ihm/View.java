@@ -56,6 +56,13 @@ public class View {
 		return null;
 	}
 	
+	public InBox createConversation(String title){
+		InBox i = new InBox(title);
+		i.setVisible(false);
+		inBoxList.add(i);
+		return i;
+	}
+	
 	public void openGroupSelectionWindow(){
 		groupSelectionWindow = new GroupSelectionWindow(this.uW.getListModel());
 	}

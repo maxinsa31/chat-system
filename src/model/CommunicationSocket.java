@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class CommunicationSocket {
+public class CommunicationSocket extends Thread{
 
 	private Socket socket;
 	
@@ -18,6 +18,8 @@ public class CommunicationSocket {
 	
 	private BufferedWriter buffWrite;
 	
+	private ObjectRead objRead;
+	
 	public CommunicationSocket(Socket socket){
 		this.socket = socket;
 		this.remoteIpAddress = socket.getInetAddress();
@@ -26,10 +28,23 @@ public class CommunicationSocket {
 			OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
 			buffRead = new BufferedReader(input);
 			buffWrite = new BufferedWriter(output);
+			objRead = new ObjectRead();
+			this.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void run(){
+		try {
+			while(true){
+				objRead.setText(buffRead.readLine());
+				System.out.println("lecture effectuée");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public InetAddress getRemoteIpAddress(){
@@ -42,6 +57,10 @@ public class CommunicationSocket {
 	
 	public Socket getSocket(){
 		return this.socket;
+	}
+	
+	public ObjectRead getObjRead(){
+		return this.objRead;
 	}
 }
 

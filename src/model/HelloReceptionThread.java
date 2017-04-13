@@ -9,7 +9,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
 
-import ihm.Observer;
+import observer.Observable;
+import observer.Observer;
 import user.MessageUser;
 
 
@@ -48,6 +49,18 @@ public class HelloReceptionThread extends Thread implements Observable {
 		return -1;
 	}
 	
+	private int rankUser(InetAddress ipAddress){ /* retourne -1 si l'@IP n'existe pas dans la liste */
+		int rank = 0;
+		for(Receiver R : this.list){
+			if(R.getIP().equals(ipAddress)){
+				return rank;
+			}else{
+				rank ++;
+			}
+		}
+		return -1;
+	}
+	
 	public void run(){
 		while(execute){
 			receiveMyObject();
@@ -57,12 +70,14 @@ public class HelloReceptionThread extends Thread implements Observable {
 			if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals(this.login)){
 				
 				this.list.add(new Receiver(msgUser.getIP(),msgUser.getPseudo()));
-				notifyObservers(msgUser.getPseudo(), rank);
+				PseudoToRank p2R = new PseudoToRank(msgUser.getPseudo(),rank);
+				notifyObservers(p2R);
 				
 			} else if (msgUser.getEtat() == MessageUser.typeConnect.DECONNECTED && rank != -1){
 				
 					this.list.remove(rank);
-					notifyObservers(msgUser.getPseudo(), rank);
+					PseudoToRank p2R = new PseudoToRank(msgUser.getPseudo(),rank);
+					notifyObservers(p2R);
 			}
 		}
 		System.out.println("Fermeture helloReceptionThread");
@@ -72,6 +87,15 @@ public class HelloReceptionThread extends Thread implements Observable {
 		int rank = rankUser(pseudo);
 		if(rank != -1){
 			return list.get(rank).getIP();
+		} else{
+			return null;
+		}
+	}
+	
+	public String getPseudoOf(InetAddress ipAddress){
+		int rank = rankUser(ipAddress);
+		if(rank != -1){
+			return list.get(rank).getPseudo();
 		} else{
 			return null;
 		}
@@ -105,8 +129,8 @@ public class HelloReceptionThread extends Thread implements Observable {
 		this.obs = obs;
 	}
 
-	public void notifyObservers(String name, int rank) {
-		obs.update(name, rank);
+	public void notifyObservers(Object o) {
+		obs.update(o);
 	}
 
 	public MessageUser getMsgUser() {

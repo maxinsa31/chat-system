@@ -6,25 +6,32 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class CommunicationServer extends Thread {
+import observer.Observable;
+import observer.Observer;
+
+public class CommunicationServer extends Thread implements Observable{
 
 	private ServerSocket waitForConnectionSocket;
 	
 	private int port;
 	
+	private ArrayList<CommunicationSocket> socketListNeverOpened;
+	
 	private ArrayList<CommunicationSocket> socketList;
 	
 	private boolean execute;
 	
+	private Observer obs;
+	
 	public CommunicationServer(){
-		this.port = 50644;
+		this.port = 50643;
 		this.socketList = new ArrayList<CommunicationSocket>();
+		this.socketListNeverOpened = new ArrayList<CommunicationSocket>();
 		this.execute = true;
 		try {
 			this.waitForConnectionSocket = new ServerSocket(this.port);
 			/*TODO :
 			 * - le port 53000 ne marche pas
-			 * - penser à fermer le port quand il y a deconnexion sinon ne marche pas quand il y a reconnexion
 			 */
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -37,7 +44,10 @@ public class CommunicationServer extends Thread {
 		while(execute){
 			try {
 				Socket communicationSocket = this.waitForConnectionSocket.accept();
-				socketList.add(new CommunicationSocket(communicationSocket));				
+				CommunicationSocket comSocket = new CommunicationSocket(communicationSocket);
+				socketListNeverOpened.add(comSocket);
+				/* notifie au controller qu'une connexion TCP a ete ouverte avec un certain host */
+				notifyObservers(comSocket);
 			} catch (IOException e) {
 				System.out.println("(CommunicationServer) Fermeture du socket du serveur d'ecoute");
 			}
@@ -52,6 +62,24 @@ public class CommunicationServer extends Thread {
 			}
 		}
 		return false;
+	}
+	
+	public boolean socketServerNeverOpenedExists(InetAddress ipAddress){
+		for(CommunicationSocket cS : socketListNeverOpened){
+			if(cS.getRemoteIpAddress().equals(ipAddress)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public CommunicationSocket findCommunicationSocketNeverUsed(InetAddress remoteIpAddress){
+		for(CommunicationSocket cS : socketListNeverOpened){
+			if(cS.getRemoteIpAddress().equals(remoteIpAddress)){
+				return cS;
+			}
+		}
+		return null;
 	}
 	
 	public CommunicationSocket findCommunicationSocket(InetAddress remoteIpAddress){
@@ -76,4 +104,18 @@ public class CommunicationServer extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
+	public void transferFromNeverUsedToUsed(CommunicationSocket cS){
+		socketList.add(cS);
+		socketListNeverOpened.remove(cS);
+	}
+
+	public void addObserver(Observer obs) {
+		this.obs = obs;		
+	}
+
+	public void notifyObservers(Object o) {
+		obs.update(o);
+	}
+	
 }

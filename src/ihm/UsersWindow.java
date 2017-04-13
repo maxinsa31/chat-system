@@ -10,6 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import model.PseudoToRank;
+import observer.Observer;
+
 public class UsersWindow extends JFrame implements Observer {
 	
 	private JList jlist;
@@ -76,12 +79,13 @@ public class UsersWindow extends JFrame implements Observer {
 		return listModel;
 	}
 
-	public void update(String name, int rank) {
-		if(rank == -1){
-			listModel.addElement(name);
-		} else{
-			listModel.remove(rank);
+	public void update(Object o) {
+		if(o instanceof PseudoToRank){
+			if(((PseudoToRank)o).getRank() == -1){
+				listModel.addElement(((PseudoToRank)o).getPseudo());
+			} else{
+				listModel.remove(((PseudoToRank)o).getRank());
+			}
 		}
-		
 	}
 }

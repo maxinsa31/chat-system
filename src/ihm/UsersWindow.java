@@ -81,6 +81,7 @@ public class UsersWindow extends JFrame implements Observer {
 
 	public void update(Object o) {
 		if(o instanceof PseudoToRank){
+			System.out.println("(update) rank="+((PseudoToRank)o).getRank());
 			if(((PseudoToRank)o).getRank() == -1){
 				listModel.addElement(((PseudoToRank)o).getPseudo());
 			} else{

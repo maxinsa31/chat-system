@@ -91,7 +91,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
-		if (! e.getValueIsAdjusting()){
+		if (! e.getValueIsAdjusting() && (String)view.getUsersWindow().getjList().getSelectedValue() != null){
 			InBox iB = view.findConversation((String)view.getUsersWindow().getjList().getSelectedValue());
 			
 			/* ouverture de la fenetre de conversation */
@@ -108,7 +108,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			/* si ni un socket serveur ni un socket client est ouvert : on cree un socket client (CommunicationClient) */
 			if(ipAddress != null && !isServer && !isClient && !isServerSocketNeverUsed){
 				try {
-					CommunicationClient cClient = new CommunicationClient(ipAddress, 50644);
+					CommunicationClient cClient = new CommunicationClient(ipAddress, 50643);
 					clients.addClient(cClient);
 					cClient.getObjRead().addObserver(i);
 				} catch (IOException e1) {

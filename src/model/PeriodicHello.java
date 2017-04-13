@@ -44,7 +44,7 @@ public class PeriodicHello extends Thread {
 		/* boucle tant que la variable 'execute' n'est pas modifiée par la classe UsersWindow */
 		while(execute){
 			sendMyObject(hello);
-			System.out.println("Message je suis connecte");
+			//System.out.println("Message je suis connecte");
 			try {
 				Thread.sleep(2000l);
 			} catch (InterruptedException e) {

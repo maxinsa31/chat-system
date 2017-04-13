@@ -36,7 +36,9 @@ public class View {
 	
 	public InBox openConversation(){
 		InBox i = findConversation((String)uW.getjList().getSelectedValue());
+		System.out.println("(View) openConversation, valeur selectionnee="+(String)uW.getjList().getSelectedValue());
 		if( i == null ){ 
+			System.out.println("(View) openConversation");
 			InBox created = new InBox((String)uW.getjList().getSelectedValue());
 			inBoxList.add(created);
 			return created;
@@ -57,6 +59,7 @@ public class View {
 	}
 	
 	public InBox createConversation(String title){
+		System.out.println("(View) createConversation");
 		InBox i = new InBox(title);
 		i.setVisible(false);
 		inBoxList.add(i);

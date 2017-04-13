@@ -24,7 +24,7 @@ public class CommunicationServer extends Thread implements Observable{
 	private Observer obs;
 	
 	public CommunicationServer(){
-		this.port = 50643;
+		this.port = 50644;
 		this.socketList = new ArrayList<CommunicationSocket>();
 		this.socketListNeverOpened = new ArrayList<CommunicationSocket>();
 		this.execute = true;

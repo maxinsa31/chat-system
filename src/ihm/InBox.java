@@ -25,6 +25,7 @@ public class InBox extends JFrame implements WindowListener, java.util.Observer{
 	private JTextArea textToSend;
 	
 	public InBox(String title){
+		System.out.println("Creation InBox");
 		bSend = new JButton("Send");
 		discussion = new JTextArea(10, 40);
 		textToSend = new JTextArea(3,30);

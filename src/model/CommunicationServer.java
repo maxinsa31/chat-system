@@ -103,6 +103,16 @@ public class CommunicationServer extends Thread implements Observable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		this.cancelSockets();
+	}
+	
+	public void cancelSockets(){
+		for(CommunicationSocket cS : socketList){
+			cS.cancelCommunicationSocket();
+		}
+		for(CommunicationSocket cS : socketListNeverOpened){
+			cS.cancelCommunicationSocket();
+		}
 	}
 	
 	public void transferFromNeverUsedToUsed(CommunicationSocket cS){

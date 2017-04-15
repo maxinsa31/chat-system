@@ -20,8 +20,11 @@ public class CommunicationSocket extends Thread{
 	
 	private ObjectRead objRead;
 	
+	private boolean execute;
+	
 	public CommunicationSocket(Socket socket){
 		this.socket = socket;
+		this.execute = true;
 		this.remoteIpAddress = socket.getInetAddress();
 		try {
 			InputStreamReader input = new InputStreamReader(socket.getInputStream());
@@ -38,13 +41,21 @@ public class CommunicationSocket extends Thread{
 	
 	public void run(){
 		try {
-			while(true){
-				objRead.setText(buffRead.readLine());
-				System.out.println("lecture effectuée");
+			while(execute){
+				String text = buffRead.readLine();
+				if(text == null){ /* fermeture de connexion du remote host */
+					System.out.println("(CommunicationSocket) deconnexion detectee");
+					execute = false;
+				}
+				else{
+					objRead.setText(text);
+					System.out.println("lecture effectuée");
+				}
 			}
+			socket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
+		System.out.println("(CommunicationSocket) remoteIP="+remoteIpAddress+" socket ferme !");
 	}
 	
 	public InetAddress getRemoteIpAddress(){
@@ -61,6 +72,15 @@ public class CommunicationSocket extends Thread{
 	
 	public ObjectRead getObjRead(){
 		return this.objRead;
+	}
+	
+	public void cancelCommunicationSocket(){
+		this.execute = false;
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
 

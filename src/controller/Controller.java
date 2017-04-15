@@ -60,7 +60,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			
 			/* lancement du serveur d'écoute de demande de connexion TCP pour communiquer */
 			commServer = new CommunicationServer();
-			System.out.println("(Controller) je m'ajoute comme observateur pour le communicationServer");
+			//System.out.println("(Controller) je m'ajoute comme observateur pour le communicationServer");
 			commServer.addObserver(this);
 			
 			
@@ -72,8 +72,10 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			this.subscriber.getPeriodicHello().cancelPeriodicHello();
 			/* on arrête l'ecoute de messages hello */
 			this.helloReceptionThread.cancelHelloReceptionThread();
-			/* on coupe le serveur d'ecoute de demande de connexion TCP */
+			/* on coupe le serveur d'ecoute de demande de connexion TCP ainsi que tous les sockets ouverts */
 			this.commServer.cancelCommunicationServer();
+			/* on coupe tous les sockets ouverts en tant que clients */
+			this.clients.cancelSockets();
 			
 		} else if(arg0.getSource().equals(view.getUsersWindow().getbCreateAGroup())){ /* Appui bouton creation de groupe */
 			
@@ -159,12 +161,12 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 
 	public void update(Object o) {
 		if(o instanceof CommunicationSocket){
-			System.out.println("(Controller/update) @IP du remote host = "+((CommunicationSocket)o).getRemoteIpAddress());
+			//System.out.println("(Controller/update) @IP du remote host = "+((CommunicationSocket)o).getRemoteIpAddress());
 			String pseudo = helloReceptionThread.getPseudoOf(((CommunicationSocket)o).getRemoteIpAddress());
-			System.out.println("(Controller/udpate) ajout d'une InBox au pseudo = "+pseudo);
+			//System.out.println("(Controller/udpate) ajout d'une InBox au pseudo = "+pseudo);
 			InBox i = view.createConversation(pseudo);
 			((CommunicationSocket)o).getObjRead().addObserver(i);
-			System.out.println("(Controller/udpate) nb obervers = "+((CommunicationSocket)o).getObjRead().countObservers());
+			//System.out.println("(Controller/udpate) nb obervers = "+((CommunicationSocket)o).getObjRead().countObservers());
 		}		
 	}
 }

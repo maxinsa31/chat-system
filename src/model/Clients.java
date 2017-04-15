@@ -41,5 +41,11 @@ public class Clients {
 		return this.cClients;
 	}
 	
+	public void cancelSockets(){
+		for(CommunicationClient cC : cClients){
+			cC.cancelCommunicationSocket();
+		}
+	}
+	
 	
 }

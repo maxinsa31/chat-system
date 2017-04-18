@@ -40,11 +40,10 @@ public class CommunicationServer extends Thread implements Observable{
 	}
 	
 	public void run(){
-
 		while(execute){
 			try {
 				Socket communicationSocket = this.waitForConnectionSocket.accept();
-				CommunicationSocket comSocket = new CommunicationSocket(communicationSocket);
+				CommunicationSocket comSocket = new CommunicationSocket(communicationSocket,false);
 				socketListNeverOpened.add(comSocket);
 				/* notifie au controller qu'une connexion TCP a ete ouverte avec un certain host */
 				notifyObservers(comSocket);

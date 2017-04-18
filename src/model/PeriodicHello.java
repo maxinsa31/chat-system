@@ -32,7 +32,8 @@ public class PeriodicHello extends Thread {
 		this.execute = true;
 		this.login = login;
 		try {
-			this.hello = new MessageUser(this.login, InetAddress.getLocalHost(), port, MessageUser.typeConnect.CONNECTED);
+			//System.out.println("adresse IP = "+InetAddress.getByName("10.32.1.55"));
+			this.hello = new MessageUser(this.login,InetAddress.getLocalHost(), port, MessageUser.typeConnect.CONNECTED);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

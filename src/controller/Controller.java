@@ -2,7 +2,9 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 
 import javax.swing.event.ListSelectionEvent;
@@ -10,6 +12,7 @@ import javax.swing.event.ListSelectionListener;
 
 import ihm.InBox;
 import ihm.View;
+import message.Message;
 import model.CommunicationServer;
 import model.Clients;
 import model.CommunicationClient;
@@ -99,10 +102,10 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			/* ouverture de la fenetre de conversation */
 			final InBox i = view.openConversation();
 			
-			
 			/* variables intermediaires relatives a la fenetre de conversation */
 			String pseudo = i.getTitle();
 			final InetAddress ipAddress = helloReceptionThread.getIpAddressOf(pseudo);
+			final int port = helloReceptionThread.getPortOf(pseudo);
 			final boolean isServer = commServer.socketServerExists(ipAddress);
 			final boolean isClient = clients.socketClientExists(ipAddress);
 			final boolean isServerSocketNeverUsed = commServer.socketServerNeverOpenedExists(ipAddress);
@@ -110,7 +113,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			/* si ni un socket serveur ni un socket client est ouvert : on cree un socket client (CommunicationClient) */
 			if(ipAddress != null && !isServer && !isClient && !isServerSocketNeverUsed){
 				try {
-					CommunicationClient cClient = new CommunicationClient(ipAddress, 50643);
+					CommunicationClient cClient = new CommunicationClient(ipAddress, port);
 					clients.addClient(cClient);
 					cClient.getObjRead().addObserver(i);
 				} catch (IOException e1) {
@@ -132,8 +135,12 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 							CommunicationSocket socket = commServer.findCommunicationSocket(ipAddress);
 							if(socket != null){
 								try {
-									socket.getBuffWrite().write(i.getTextToSend()+"\n");
-									socket.getBuffWrite().flush();
+									Message message = new Message();
+									message.setData(i.getTextToSend());
+									/*socket.getBuffWrite().write(i.getTextToSend()+"\n");
+									socket.getBuffWrite().flush();*/
+									socket.getoS().writeObject(message);
+									socket.getoS().flush();
 									System.out.println("(Server):j'envoi le messgae : "+i.getTextToSend());
 								} catch (IOException e1) {
 									e1.printStackTrace();
@@ -143,8 +150,13 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 							CommunicationSocket socket = clients.findCommunicationSocket(ipAddress);
 							if(socket != null){
 								try{
-									socket.getBuffWrite().write(i.getTextToSend()+"\n");
-									socket.getBuffWrite().flush();
+									Message message = new Message();
+									message.setData(i.getTextToSend());
+									socket.getoS().writeObject(message);
+									socket.getoS().flush();
+									
+									/*socket.getBuffWrite().write(i.getTextToSend()+"\n");
+									socket.getBuffWrite().flush();*/
 									System.out.println("(Client):j'envoi le messgae : "+i.getTextToSend());
 								} catch (IOException e1) {
 									e1.printStackTrace();
@@ -153,6 +165,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 						}
 					}
 				});
+				System.out.println("apres add action listener");
 
 				
 			}

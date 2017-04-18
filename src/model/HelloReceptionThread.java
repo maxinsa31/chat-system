@@ -70,7 +70,7 @@ public class HelloReceptionThread extends Thread implements Observable {
 			if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals(this.login)){
 
 				System.out.println("FIRST HELLO : user="+msgUser.getPseudo()+" etat="+msgUser.getEtat()+" rank="+rank);
-				this.list.add(new Receiver(msgUser.getIP(),msgUser.getPseudo()));
+				this.list.add(new Receiver(msgUser.getIP(),msgUser.getPseudo(), msgUser.getPort()));
 				PseudoToRank p2R = new PseudoToRank(msgUser.getPseudo(),rank);
 				notifyObservers(p2R);
 				
@@ -91,6 +91,15 @@ public class HelloReceptionThread extends Thread implements Observable {
 			return list.get(rank).getIP();
 		} else{
 			return null;
+		}
+	}
+	
+	public int getPortOf(String pseudo){
+		int rank = rankUser(pseudo);
+		if(rank != -1){
+			return list.get(rank).getPort();
+		} else{
+			return -1;
 		}
 	}
 	

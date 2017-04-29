@@ -135,6 +135,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 								socket.getoS().flush();
 								
 								System.out.println("(Client):j'envoi le messgae : "+i.getTextToSend());
+								i.setMajSend();
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}		
@@ -171,6 +172,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 								socket.getoS().writeObject(message);
 								socket.getoS().flush();
 								System.out.println("(Server):j'envoi le messgae : "+i.getTextToSend());
+								i.setMajSend();
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}

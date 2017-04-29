@@ -83,6 +83,16 @@ public class InBox extends JFrame implements WindowListener, java.util.Observer{
 		if(!this.isVisible())
 			this.setVisible(true);
 	}
+	
+	public void setMajSend(){
+		if(conv.equals("")){
+			this.conv = "moi : "+this.getTextToSend();
+		}else{
+			this.conv = conv+"\n"+"moi : "+this.getTextToSend();
+		}
+		this.discussion.setText(conv);
+		this.textToSend.setText("");
+	}
 
 	public void windowActivated(WindowEvent arg0) {
 		

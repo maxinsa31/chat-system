@@ -125,7 +125,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 				
 				i.getbSend().addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						System.out.println("Appui sur le bouton send");		
+						//System.out.println("Appui sur le bouton send");		
 						CommunicationSocket socket = clients.findCommunicationSocket(ipAddress);
 						if(socket != null){
 							try{
@@ -134,7 +134,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 								socket.getoS().writeObject(message);
 								socket.getoS().flush();
 								
-								System.out.println("(Client):j'envoi le messgae : "+i.getTextToSend());
+								//System.out.println("(Client):j'envoi le messgae : "+i.getTextToSend());
 								i.setMajSend();
 							} catch (IOException e1) {
 								e1.printStackTrace();
@@ -142,7 +142,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 						}
 					}
 				});
-				System.out.println("apres add action listener");
+				//System.out.println("apres add action listener");
 
 				
 			}
@@ -163,7 +163,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 				commServer.transferFromNeverUsedToUsed(cS);
 				i.getbSend().addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						System.out.println("Appui sur le bouton send");
+						//System.out.println("Appui sur le bouton send");
 						CommunicationSocket socket = commServer.findCommunicationSocket(ipAddress);
 						if(socket != null){
 							try {
@@ -171,7 +171,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 								message.setData(i.getTextToSend());
 								socket.getoS().writeObject(message);
 								socket.getoS().flush();
-								System.out.println("(Server):j'envoi le messgae : "+i.getTextToSend());
+								//System.out.println("(Server):j'envoi le message : "+i.getTextToSend());
 								i.setMajSend();
 							} catch (IOException e1) {
 								e1.printStackTrace();

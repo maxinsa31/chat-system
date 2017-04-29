@@ -25,7 +25,7 @@ public class Subscribe {
 		this.port = 5002;		
 		this.subscribeMulticast();
 		this.login = login;
-		this.periodicHello = new PeriodicHello(this.mS,this.group,50644,this.login);
+		this.periodicHello = new PeriodicHello(this.mS,this.group,50643,this.login);
 	}
 
 	private void subscribeMulticast(){

@@ -14,13 +14,15 @@ import observer.Observer;
 import user.MessageUser;
 
 
-public class HelloReceptionThread extends Thread implements Observable {
+public class HelloReceptionThread extends Thread implements Observable, Observer {
 	
 	private MulticastSocket mS;
 	
 	private MessageUser msgUser;
 	
 	private ArrayList<Receiver> list;
+	
+	private Timers timers;
 	
 	private boolean execute;
 	
@@ -30,6 +32,7 @@ public class HelloReceptionThread extends Thread implements Observable {
 	
 	public HelloReceptionThread(MulticastSocket mS, String login){
 		this.list = new ArrayList<Receiver>();
+		this.timers = new Timers();
 		this.mS = mS;
 		this.execute = true;
 		this.login = login;
@@ -65,24 +68,30 @@ public class HelloReceptionThread extends Thread implements Observable {
 		while(execute){
 			receiveMyObject();
 			
-			int rank = rankUser(msgUser.getPseudo());
+			String pseudo = msgUser.getPseudo();
+			int rank = rankUser(pseudo);
 			
-			if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && rank == -1 && !msgUser.getPseudo().equals(this.login)){
+			if(msgUser.getEtat() == MessageUser.typeConnect.CONNECTED && !pseudo.equals(this.login)){
+				if(rank == -1){
 
-				System.out.println("FIRST HELLO : user="+msgUser.getPseudo()+" etat="+msgUser.getEtat()+" rank="+rank);
-				this.list.add(new Receiver(msgUser.getIP(),msgUser.getPseudo(), msgUser.getPort()));
-				PseudoToRank p2R = new PseudoToRank(msgUser.getPseudo(),rank);
-				notifyObservers(p2R);
+					System.out.println("FIRST HELLO : user="+pseudo+" etat="+msgUser.getEtat()+" rank="+rank);
+					this.list.add(new Receiver(msgUser.getIP(),pseudo, msgUser.getPort()));
+					PseudoToRank p2R = new PseudoToRank(pseudo,rank);
+					notifyObservers(p2R);
+					timers.launchTimer(pseudo,this);
+					
+				} else{
+					timers.refreshTimer(pseudo,this);
+				}
 				
 			} else if (msgUser.getEtat() == MessageUser.typeConnect.DECONNECTED && rank != -1){
 
-					System.out.println("GOOD-BYE : user="+msgUser.getPseudo()+" etat="+msgUser.getEtat()+" rank="+rank);
+					System.out.println("GOOD-BYE : user="+pseudo+" etat="+msgUser.getEtat()+" rank="+rank);
 					this.list.remove(rank);
-					PseudoToRank p2R = new PseudoToRank(msgUser.getPseudo(),rank);
+					PseudoToRank p2R = new PseudoToRank(pseudo,rank);
 					notifyObservers(p2R);
-			} else{
-				System.out.println("je recois mon annonce");
-			}
+					timers.deleteTimer(pseudo);
+			} 
 		}
 		System.out.println("Fermeture helloReceptionThread");
 	}
@@ -142,12 +151,25 @@ public class HelloReceptionThread extends Thread implements Observable {
 		this.obs = obs;
 	}
 
+	/* avertir l'ihm d'une deconnexion */
 	public void notifyObservers(Object o) {
 		obs.update(o);
 	}
 
 	public MessageUser getMsgUser() {
 		return msgUser;
+	}
+
+	/* en reaction a une expiration de timer */
+	public void update(Object o) {
+		if(o instanceof TaskTimer){
+			String pseudo = ((TaskTimer)o).getName();
+			int rank = rankUser(pseudo);
+			this.list.remove(rank);
+			PseudoToRank p2R = new PseudoToRank(pseudo,rank);
+			notifyObservers(p2R);
+			timers.deleteTimer(pseudo);
+		}
 	}
 	
 }

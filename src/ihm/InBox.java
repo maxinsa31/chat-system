@@ -2,8 +2,6 @@ package ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Observable;
@@ -23,6 +21,8 @@ public class InBox extends JFrame implements WindowListener, java.util.Observer{
 	private JTextArea discussion;
 	
 	private JTextArea textToSend;
+	
+	private String conv= "";
 	
 	public InBox(String title, boolean affiche){
 		System.out.println("Creation InBox");
@@ -73,9 +73,15 @@ public class InBox extends JFrame implements WindowListener, java.util.Observer{
 	public void update(Observable o, Object arg) {
 		System.out.println("(InBox) update execute ");
 		if(arg instanceof ObjectRead){
-			this.discussion.setText(((ObjectRead) arg).getText());
-			this.setVisible(true);
+			if(conv.equals("")){
+				this.conv = this.title+" : "+((ObjectRead) arg).getText();
+			}else{
+				this.conv = conv+"\n"+this.title+" : "+((ObjectRead) arg).getText();
+			}
+			this.discussion.setText(conv);
 		}
+		if(!this.isVisible())
+			this.setVisible(true);
 	}
 
 	public void windowActivated(WindowEvent arg0) {

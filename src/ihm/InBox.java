@@ -24,17 +24,17 @@ public class InBox extends JFrame implements WindowListener, java.util.Observer{
 	
 	private JTextArea textToSend;
 	
-	public InBox(String title){
+	public InBox(String title, boolean affiche){
 		System.out.println("Creation InBox");
 		bSend = new JButton("Send");
 		discussion = new JTextArea(10, 40);
 		textToSend = new JTextArea(3,30);
 		this.title = title;
 		
-		initComponents();
+		initComponents(affiche);
 	}
 	
-	private void initComponents(){
+	private void initComponents(boolean affiche){
 		this.setTitle(title);
 		/* centre la fenetre */
 		this.setLocationRelativeTo(null);
@@ -50,7 +50,7 @@ public class InBox extends JFrame implements WindowListener, java.util.Observer{
 		this.pack();
 		/* fenetre visible */
 		this.setSize(400, 300);
-		this.setVisible(true);
+		this.setVisible(affiche);
 	}
 	
 	public String getTextToSend(){
@@ -74,6 +74,7 @@ public class InBox extends JFrame implements WindowListener, java.util.Observer{
 		System.out.println("(InBox) update execute ");
 		if(arg instanceof ObjectRead){
 			this.discussion.setText(((ObjectRead) arg).getText());
+			this.setVisible(true);
 		}
 	}
 

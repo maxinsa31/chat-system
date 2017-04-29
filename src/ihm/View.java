@@ -39,7 +39,7 @@ public class View {
 		System.out.println("(View) openConversation, valeur selectionnee="+(String)uW.getjList().getSelectedValue());
 		if( i == null ){ 
 			System.out.println("(View) openConversation");
-			InBox created = new InBox((String)uW.getjList().getSelectedValue());
+			InBox created = new InBox((String)uW.getjList().getSelectedValue(),true);
 			inBoxList.add(created);
 			return created;
 		}else{
@@ -60,8 +60,7 @@ public class View {
 	
 	public InBox createConversation(String title){
 		System.out.println("(View) createConversation");
-		InBox i = new InBox(title);
-		i.setVisible(false);
+		InBox i = new InBox(title,false);
 		inBoxList.add(i);
 		return i;
 	}

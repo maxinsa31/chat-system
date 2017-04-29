@@ -3,6 +3,8 @@ package model;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 
@@ -30,6 +32,15 @@ public class Subscribe {
 		try {
 			group = InetAddress.getByName("225.1.2.3");
 			this.mS = new MulticastSocket(this.port);
+			try {
+				this.mS.setNetworkInterface(NetworkInterface.getByInetAddress(InetAddress.getByName("192.168.1.22")));
+			} catch (SocketException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			this.mS.joinGroup(group);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

@@ -7,6 +7,8 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import user.MessageUser;
@@ -32,8 +34,14 @@ public class PeriodicHello extends Thread {
 		this.execute = true;
 		this.login = login;
 		try {
-			//System.out.println("adresse IP = "+InetAddress.getByName("10.32.1.55"));
-			this.hello = new MessageUser(this.login,InetAddress.getLocalHost(), port, MessageUser.typeConnect.CONNECTED);
+			try {
+				System.out.println("adresse IP = "+InetAddress.getByName("192.168.1.22")+"interface multi ="+this.mS.getNetworkInterface());
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//this.hello = new MessageUser(this.login,InetAddress.getLocalHost(), port, MessageUser.typeConnect.CONNECTED);
+			this.hello = new MessageUser(this.login,InetAddress.getByName("192.168.1.22"), port, MessageUser.typeConnect.CONNECTED);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -74,7 +82,7 @@ public class PeriodicHello extends Thread {
 			oOS.writeObject(m);
 			oOS.flush();
 			byte[] sendBuf = byteStream.toByteArray();
-			DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length,this.group,this.port);
+			DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length,this.group,5002);
 			mS.send(packet);
 			oOS.close();
 		} catch (IOException e) {

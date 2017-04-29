@@ -9,8 +9,8 @@ public class GroupBox extends InBox {
 	ArrayList<String> members;
 	
 	public GroupBox(String title, JCheckBox[] users) {
-		super(title);
-		this.setVisible(false);
+		super(title,false);
+		//this.setVisible(false);
 		members = new ArrayList<String>();
 		String t="";
 		for(JCheckBox cB : users){

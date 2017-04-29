@@ -80,6 +80,8 @@ public class HelloReceptionThread extends Thread implements Observable {
 					this.list.remove(rank);
 					PseudoToRank p2R = new PseudoToRank(msgUser.getPseudo(),rank);
 					notifyObservers(p2R);
+			} else{
+				System.out.println("je recois mon annonce");
 			}
 		}
 		System.out.println("Fermeture helloReceptionThread");

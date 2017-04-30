@@ -23,8 +23,8 @@ public class CommunicationServer extends Thread implements Observable{
 	
 	private Observer obs;
 	
-	public CommunicationServer(){
-		this.port = 50643;
+	public CommunicationServer(int port){
+		this.port = port;
 		this.socketList = new ArrayList<CommunicationSocket>();
 		this.socketListNeverOpened = new ArrayList<CommunicationSocket>();
 		this.execute = true;
@@ -41,6 +41,7 @@ public class CommunicationServer extends Thread implements Observable{
 			try {
 				Socket communicationSocket = this.waitForConnectionSocket.accept();
 				CommunicationSocket comSocket = new CommunicationSocket(communicationSocket,false);
+				comSocket.start();
 				socketListNeverOpened.add(comSocket);
 				/* notifie au controller qu'une connexion TCP a ete ouverte avec un certain host */
 				notifyObservers(comSocket);
@@ -121,7 +122,8 @@ public class CommunicationServer extends Thread implements Observable{
 	}
 
 	public void notifyObservers(Object o) {
-		obs.update(o);
+		if(obs != null)
+			obs.update(o);
 	}
 	
 }

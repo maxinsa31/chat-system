@@ -35,17 +35,17 @@ public class PeriodicHello extends Thread {
 		this.login = login;
 		try {
 			try {
-				System.out.println("adresse IP = "+InetAddress.getByName("192.168.1.22")+"interface multi ="+this.mS.getNetworkInterface());
+				System.out.println("adresse IP = "+InetAddress.getByName("192.168.1.27")+"interface multi ="+this.mS.getNetworkInterface());
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			//this.hello = new MessageUser(this.login,InetAddress.getLocalHost(), port, MessageUser.typeConnect.CONNECTED);
-			this.hello = new MessageUser(this.login,InetAddress.getByName("192.168.1.22"), port, MessageUser.typeConnect.CONNECTED);
+			this.hello = new MessageUser(this.login,InetAddress.getByName("192.168.1.27"), port, MessageUser.typeConnect.CONNECTED);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		this.start();
+		//this.start();
 	}
 	
 	
@@ -64,7 +64,7 @@ public class PeriodicHello extends Thread {
 		 * 		-> il faut donc envoyer un message d'indication de déconnexion
 		 */
 		try {
-			MessageUser goodBye = new MessageUser(this.login, InetAddress.getLocalHost(), port, MessageUser.typeConnect.DECONNECTED);
+			MessageUser goodBye = new MessageUser(this.login, InetAddress.getByName("192.168.1.27"), port, MessageUser.typeConnect.DECONNECTED);
 			sendMyObject(goodBye);
 			System.out.println("Message deconnexion");
 		} catch (UnknownHostException e) {
@@ -74,7 +74,7 @@ public class PeriodicHello extends Thread {
 		 
 	}
 	
-	private void sendMyObject(MessageUser m){
+	public void sendMyObject(MessageUser m){
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		try {
 			ObjectOutputStream oOS = new ObjectOutputStream(new BufferedOutputStream(byteStream));

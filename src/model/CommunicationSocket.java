@@ -20,10 +20,6 @@ public class CommunicationSocket extends Thread{
 	
 	private InetAddress remoteIpAddress;
 	
-	/*private BufferedReader buffRead;
-	
-	private BufferedWriter buffWrite;*/
-	
 	private ObjectInputStream iS;
 	
 	private ObjectOutputStream oS;
@@ -37,44 +33,29 @@ public class CommunicationSocket extends Thread{
 		this.execute = true;
 		this.remoteIpAddress = socket.getInetAddress();
 		try {
-			/*InputStreamReader input = new InputStreamReader(socket.getInputStream());
-			OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
-			buffRead = new BufferedReader(input);
-			buffWrite = new BufferedWriter(output);*/
 			if(isClient){
-				System.out.println("avant getInputStream");
 				iS = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-				System.out.println("avant getOutputStream");
 				oS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-				System.out.println("apres getOutputStream");
 				oS.flush();
 			}else{
-				System.out.println("avant getOutputStream");
 				oS = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 				oS.flush();
-				System.out.println("apres getOutputStream");
-				System.out.println("avant getInputStream");
 				iS = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-				System.out.println("apres getInputStream");
 			}
 			
 			objRead = new ObjectRead();
-			this.start();
+			//this.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("fin du communicationSocket()");
 	}
 	
 	public void run(){
 		try {
 			while(execute){
-				//String text = buffRead.readLine();
 				Message message;
 				try {
-					System.out.println("avant lecture");
 					message = (Message) iS.readObject();
-					System.out.println("un objet a ete lu !!!");
 
 					if(message == null){ /* fermeture de connexion du remote host */
 						System.out.println("(CommunicationSocket) deconnexion detectee");
@@ -104,6 +85,10 @@ public class CommunicationSocket extends Thread{
 	
 	public ObjectOutputStream getoS(){
 		return oS;
+	}
+	
+	public ObjectInputStream getiS(){
+		return iS;
 	}
 	
 	public ObjectRead getObjRead(){

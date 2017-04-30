@@ -69,7 +69,7 @@ public class View {
 		groupSelectionWindow = new GroupSelectionWindow(this.uW.getListModel());
 	}
 	
-	public void openGroupConversation(){
+	public GroupBox openGroupConversation(){
 		
 		if(this.groupSelectionWindow.possibleToCreate()){ /* si au moins 2 utilisateurs ont été selectionnes */
 			
@@ -77,6 +77,7 @@ public class View {
 			this.groupSelectionWindow.dispose();
 	
 			GroupBox selected = new GroupBox("", this.groupSelectionWindow.getUsers());
+			GroupBox resu = null;
 			boolean exists = false;
 			/* verification de la non existence de ce groupe */
 			for(GroupBox gB : groupBoxList){
@@ -84,15 +85,20 @@ public class View {
 					selected.dispose();
 					gB.setVisible(true);
 					exists = true;
+					resu = gB;
 				}
 			}
 			if(!exists){ /* le groupe n'existe pas donc on le cree*/
 				groupBoxList.add(selected);
 				selected.setVisible(true);
+				return selected;
+			} else{ 
+				return resu;
 			}
 			
 		} else{
 			// TODO : ouverture d'une fenetre d'erreur pour indiquer que le nombre de destinataires doit etre superieur à 2 
+			return null;
 		}
 		
 		

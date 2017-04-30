@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import ihm.GroupBox;
 import ihm.InBox;
 import ihm.View;
 import message.Message;
@@ -53,7 +54,9 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			
 			/* On declenche les actions au niveau du réseau */
 			this.subscriber = new Subscribe(login);
+			this.subscriber.getPeriodicHello().start();
 			this.helloReceptionThread = new HelloReceptionThread(subscriber.getmS(),login);
+			this.helloReceptionThread.start();
 			
 			/* ajout de la UsersWindow comme observer du modele */
 			this.helloReceptionThread.addObserver(view.getUsersWindow());
@@ -62,7 +65,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			clients = new Clients();
 			
 			/* lancement du serveur d'écoute de demande de connexion TCP pour communiquer */
-			commServer = new CommunicationServer();
+			commServer = new CommunicationServer(50644);
 			//System.out.println("(Controller) je m'ajoute comme observateur pour le communicationServer");
 			commServer.addObserver(this);
 			
@@ -89,7 +92,19 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			
 		} else if(arg0.getSource().equals(view.getGroupSelectionWindow().getbFinish())){ /* Appui bouton Terminer creation de groupe */
 			
-			this.view.openGroupConversation();
+			GroupBox gB = this.view.openGroupConversation();
+			
+			/* si plus de 2 destinataires ont ete selectionnes */
+			if(gB != null){
+				//TODO :
+				/*
+				 *  - verifier existence de InBox pour chacun des destinataires
+				 *  - si n'existe pas :
+				 *  	- creer un InBox pour ceux qui n'en ont pas et ajouter actionListener bSend
+				 *  - si la discussion de groupe vient d'être creee, on ajoute l'actionListener du bouton bSend
+				 *  		-> envoi du message à partir de chacun des sockets
+				 */
+			}
 			
 		}
 		

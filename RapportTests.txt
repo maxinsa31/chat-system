@@ -1,0 +1,44 @@
+Rapport de tests unitaires de notre projet
+
+Auteurs : Maxime FARGEAS , Lionel SOUKARIE
+
+-> ClientsTest.java :
+
+	Rappel : la classe Clients tient à jour une liste ("clients") des sockets clients utilisés
+	
+	* testSocketClientExists : 
+		- test pour vérifier si il existe un socket dans la liste "clients" rattaché à  une adresse IP "ip"
+		- passe le test avec succès
+		
+	* testFindCommunicationSocket :
+		- même principe que pour le test précédent mais cette fois, la méthode "findCommunicationSocket" renvoie le socket associé à "ip"
+		- passe le test avec succès
+
+-> HelloReceptionThreadTest.java :
+	
+	* testGetIpAddressOf :
+		- test pour vérifier que l'adresse IP renvoyée, associée à un certain pseudo, est valide
+		- passe le test avec succès
+		
+	* testGetPortOf :
+		- test pour vérifier que le port renvoyé, associé à un certain pseudo, est valide
+		- passe le test avec succès
+		
+	* testGetPseudoOf :
+		- test pour vérifier que le pseudo renvoyé, associé à une certaine adresse IP, est valide
+		- passe le test avec succès
+		
+	* testReceptionHello :
+		- test pour vérifier que la methode ReceiveMyObject de HelloReceptionThread receptionne bien les "hello" et le "goodbye"
+		- passe le test avec succès
+		
+-> PeriodicHelloTest.java :
+
+	* testSendHelloGoodBye : 
+		- test pour vérifier que la methode SendMyObject de PeriodicHello envoie bien les "hello" et le "goodbye"
+		- passe le test avec succès
+		
+-> CommunicationClientTest.java :
+	* testSendAndReceive :
+		- test pour vérifier qu'un client (=socket) arrive à envoyer (et recevoir) des messages textuels vers (en provenance d') un hôte (=socket) distant
+		- passe le test avec succès

@@ -8,6 +8,7 @@ public class CommunicationClient extends CommunicationSocket{
 	
 	public CommunicationClient(InetAddress address, int port) throws IOException{
 		super(new Socket(address,port),true);
+		this.start();
 	}
 
 }

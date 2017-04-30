@@ -36,7 +36,7 @@ public class HelloReceptionThread extends Thread implements Observable, Observer
 		this.mS = mS;
 		this.execute = true;
 		this.login = login;
-		this.start();
+		//this.start();
 	}
 	
 
@@ -105,6 +105,11 @@ public class HelloReceptionThread extends Thread implements Observable, Observer
 		}
 	}
 	
+	public ArrayList<Receiver> getList() {
+		return list;
+	}
+
+
 	public int getPortOf(String pseudo){
 		int rank = rankUser(pseudo);
 		if(rank != -1){
@@ -153,7 +158,8 @@ public class HelloReceptionThread extends Thread implements Observable, Observer
 
 	/* avertir l'ihm d'une deconnexion */
 	public void notifyObservers(Object o) {
-		obs.update(o);
+		if(obs != null)
+			obs.update(o);
 	}
 
 	public MessageUser getMsgUser() {

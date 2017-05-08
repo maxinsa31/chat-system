@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 
 import org.junit.Test;
 
@@ -92,21 +93,27 @@ public class HelloReceptionThreadTest {
 	
 	@Test
 	public void testReceptionHello(){
-		Subscribe subscribe = new Subscribe("sender");
-		subscribe.getPeriodicHello().start();
-		HelloReceptionThread hrt = new HelloReceptionThread(subscribe.getmS(), "receiver");
-		
-		hrt.receiveMyObject();
-		
-		assertTrue("le message recu n'est pas un hello du sender", hrt.getMsgUser().getPseudo().equals("sender") && hrt.getMsgUser().getEtat().equals(MessageUser.typeConnect.CONNECTED));
-		
-		subscribe.getPeriodicHello().cancelPeriodicHello();
-		while(hrt.getMsgUser().getEtat().equals(MessageUser.typeConnect.CONNECTED)){
+		Subscribe subscribe;
+		try {
+			subscribe = new Subscribe("sender",InetAddress.getLocalHost(),50644,5002);
+
+			subscribe.getPeriodicHello().start();
+			HelloReceptionThread hrt = new HelloReceptionThread(subscribe.getmS(), "receiver");
+			
 			hrt.receiveMyObject();
+			
+			assertTrue("le message recu n'est pas un hello du sender", hrt.getMsgUser().getPseudo().equals("sender") && hrt.getMsgUser().getEtat().equals(MessageUser.typeConnect.CONNECTED));
+			
+			subscribe.getPeriodicHello().cancelPeriodicHello();
+			while(hrt.getMsgUser().getEtat().equals(MessageUser.typeConnect.CONNECTED)){
+				hrt.receiveMyObject();
+			}
+			
+			assertTrue("le message recu n'est pas un goodbye", hrt.getMsgUser().getPseudo().equals("sender") && hrt.getMsgUser().getEtat().equals(MessageUser.typeConnect.DECONNECTED));
+			
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
-		
-		assertTrue("le message recu n'est pas un goodbye", hrt.getMsgUser().getPseudo().equals("sender") && hrt.getMsgUser().getEtat().equals(MessageUser.typeConnect.DECONNECTED));
-		
 	}
 
 }

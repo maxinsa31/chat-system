@@ -21,31 +21,31 @@ public class PeriodicHello extends Thread {
 	
 	private InetAddress group;
 	
-	private int port;
+	private int myServerPort;
 	
 	private boolean execute;
 	
 	private String login;
 	
-	public PeriodicHello(MulticastSocket mS,InetAddress group, int port, String login){
+	private InetAddress myIp;
+	
+	private int myMulticastPort;
+	
+	public PeriodicHello(MulticastSocket mS,InetAddress group, int myServerPort, String login, InetAddress myIp, int myMulticastPort){
 		this.mS = mS;
-		this.port = port;
+		this.myServerPort = myServerPort;
 		this.group = group;
 		this.execute = true;
 		this.login = login;
+		this.myIp = myIp;
+		this.myMulticastPort = myMulticastPort;
 		try {
-			try {
-				System.out.println("adresse IP = "+InetAddress.getByName("192.168.1.27")+"interface multi ="+this.mS.getNetworkInterface());
-			} catch (SocketException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//this.hello = new MessageUser(this.login,InetAddress.getLocalHost(), port, MessageUser.typeConnect.CONNECTED);
-			this.hello = new MessageUser(this.login,InetAddress.getByName("192.168.1.27"), port, MessageUser.typeConnect.CONNECTED);
-		} catch (UnknownHostException e) {
+			System.out.println("adresse IP = "+this.myIp+"interface multi ="+this.mS.getNetworkInterface());
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//this.start();
+		this.hello = new MessageUser(this.login,this.myIp, this.myServerPort, MessageUser.typeConnect.CONNECTED);
 	}
 	
 	
@@ -63,13 +63,8 @@ public class PeriodicHello extends Thread {
 		/* thread arrêté car click sur le bouton 'deconnection'
 		 * 		-> il faut donc envoyer un message d'indication de déconnexion
 		 */
-		try {
-			MessageUser goodBye = new MessageUser(this.login, InetAddress.getByName("192.168.1.27"), port, MessageUser.typeConnect.DECONNECTED);
-			sendMyObject(goodBye);
-			System.out.println("Message deconnexion");
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		MessageUser goodBye = new MessageUser(this.login,this.myIp, this.myServerPort, MessageUser.typeConnect.DECONNECTED);
+		sendMyObject(goodBye);
 		
 		 
 	}
@@ -82,7 +77,7 @@ public class PeriodicHello extends Thread {
 			oOS.writeObject(m);
 			oOS.flush();
 			byte[] sendBuf = byteStream.toByteArray();
-			DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length,this.group,5002);
+			DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length,this.group,this.myMulticastPort);
 			mS.send(packet);
 			oOS.close();
 		} catch (IOException e) {

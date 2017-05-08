@@ -34,9 +34,18 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 	
 	private Clients clients;
 	
+	private InetAddress myIp;
 	
-	public Controller(View view){
+	private int myServerPort;
+	
+	private int myMulticastPort;
+	
+	
+	public Controller(View view, InetAddress myIp, int myServerPort, int myMulticastPort){
 		this.view = view;
+		this.myIp = myIp;
+		this.myServerPort = myServerPort;
+		this.myMulticastPort = myMulticastPort;
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -53,7 +62,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			
 			
 			/* On declenche les actions au niveau du réseau */
-			this.subscriber = new Subscribe(login);
+			this.subscriber = new Subscribe(login,this.myIp,this.myServerPort,this.myMulticastPort);
 			this.subscriber.getPeriodicHello().start();
 			this.helloReceptionThread = new HelloReceptionThread(subscriber.getmS(),login);
 			this.helloReceptionThread.start();
@@ -65,7 +74,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			clients = new Clients();
 			
 			/* lancement du serveur d'écoute de demande de connexion TCP pour communiquer */
-			commServer = new CommunicationServer(50644);
+			commServer = new CommunicationServer(this.myServerPort);
 			//System.out.println("(Controller) je m'ajoute comme observateur pour le communicationServer");
 			commServer.addObserver(this);
 			
@@ -139,8 +148,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 			if(iB == null){
 				
 				i.getbSend().addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//System.out.println("Appui sur le bouton send");		
+					public void actionPerformed(ActionEvent e) {	
 						CommunicationSocket socket = clients.findCommunicationSocket(ipAddress);
 						if(socket != null){
 							try{
@@ -149,7 +157,6 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 								socket.getoS().writeObject(message);
 								socket.getoS().flush();
 								
-								//System.out.println("(Client):j'envoi le messgae : "+i.getTextToSend());
 								i.setMajSend();
 							} catch (IOException e1) {
 								e1.printStackTrace();
@@ -157,7 +164,6 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 						}
 					}
 				});
-				//System.out.println("apres add action listener");
 
 				
 			}
@@ -166,9 +172,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 
 	public void update(Object o) {
 		if(o instanceof CommunicationSocket){
-			//System.out.println("(Controller/update) @IP du remote host = "+((CommunicationSocket)o).getRemoteIpAddress());
 			String pseudo = helloReceptionThread.getPseudoOf(((CommunicationSocket)o).getRemoteIpAddress());
-			//System.out.println("(Controller/udpate) ajout d'une InBox au pseudo = "+pseudo);
 			final InBox i = view.createConversation(pseudo);
 			final InetAddress ipAddress = helloReceptionThread.getIpAddressOf(pseudo);
 			final boolean isServerSocketNeverUsed = commServer.socketServerNeverOpenedExists(ipAddress);
@@ -178,7 +182,6 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 				commServer.transferFromNeverUsedToUsed(cS);
 				i.getbSend().addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						//System.out.println("Appui sur le bouton send");
 						CommunicationSocket socket = commServer.findCommunicationSocket(ipAddress);
 						if(socket != null){
 							try {
@@ -186,7 +189,6 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 								message.setData(i.getTextToSend());
 								socket.getoS().writeObject(message);
 								socket.getoS().flush();
-								//System.out.println("(Server):j'envoi le message : "+i.getTextToSend());
 								i.setMajSend();
 							} catch (IOException e1) {
 								e1.printStackTrace();
@@ -196,9 +198,7 @@ public class Controller implements ActionListener, ListSelectionListener, Observ
 				});
 				
 			}
-			((CommunicationSocket)o).getObjRead().addObserver(i);
-			//System.out.println("(Controller/udpate) nb obervers = "+((CommunicationSocket)o).getObjRead().countObservers());
-		}		
+			((CommunicationSocket)o).getObjRead().addObserver(i);}		
 	}
 }
 

@@ -15,29 +15,32 @@ public class Subscribe {
 	
 	private InetAddress group;
 
-	private int port;
+	private int myMulticastPort;
 
 	private PeriodicHello periodicHello;
 	
 	private String login;
 	
-	public Subscribe(String login){
-		this.port = 5002;		
+	private InetAddress myIp;
+	
+	private int myServerPort;
+	
+	public Subscribe(String login, InetAddress myIp, int myServerPort, int myMulticastPort){
+		this.myMulticastPort = myMulticastPort;		
+		this.myServerPort = myServerPort;
+		this.myIp = myIp;
 		this.subscribeMulticast();
 		this.login = login;
-		this.periodicHello = new PeriodicHello(this.mS,this.group,50644,this.login);
+		this.periodicHello = new PeriodicHello(this.mS,this.group,this.myServerPort,this.login,this.myIp,this.myMulticastPort);
 	}
 
 	private void subscribeMulticast(){
 		try {
 			group = InetAddress.getByName("225.1.2.3");
-			this.mS = new MulticastSocket(this.port);
+			this.mS = new MulticastSocket(this.myMulticastPort);
 			try {
-				this.mS.setNetworkInterface(NetworkInterface.getByInetAddress(InetAddress.getByName("192.168.1.27")));
+				this.mS.setNetworkInterface(NetworkInterface.getByInetAddress(this.myIp));
 			} catch (SocketException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}

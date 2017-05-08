@@ -1,0 +1,12 @@
+Rapport de tests de groupe
+
+Test #1 :
+	- Auteur : Maxime FARGEAS
+	- package "groupTest"
+	- Objectif de ce test : tester le bon fonctionnement de la connexion à un serveur, de l'envoi de messages à 
+		ce serveur, de la réception de messages en provenance de ce serveur
+	- Classes : EchangeMessagesAvecPerroquetTest.java, ServeurPerroquetGroupe.java
+	- Interface : FacadeTestPerroquet.java
+		-> cette interface contient les en-têtes de méthodes indispensables à ce test. Elle est implémentée dans les
+			classes EchangeMessagesAvecPerroquetTest.java et ServeurPerroquetGroupe.java.
+		-> chaque groupe doit remplir ces méthodes afin de les rendre compatibles avec son projet

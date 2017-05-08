@@ -11,8 +11,8 @@ public class launchChatSystem {
 		
 		/* Param�tres importants */
 		try {
-			InetAddress myIp = InetAddress.getByName("192.168.1.92");
-			int myServerPort = 50642;
+			InetAddress myIp = InetAddress.getByName("192.168.1.46");
+			int myServerPort = 50643;
 			int myMulticastPort = 5002;
 			
 			

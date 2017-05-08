@@ -20,7 +20,8 @@ Pour tester notre projet :
 		Une fois le projet recupere du git, un point d'exclamation rouge s'affiche (sur eclipse).
 		Il faut faire un clic droit sur le projet dans Package Explorer (a gauche dans elcipse)
 		puis build Path > Configure Build Path.
-		Dans l'onglet Libraries --> Remove "Chat.jar" puis Add External Jars --> selectionner "Chat.jar".
+		Dans l'onglet Libraries --> Remove "Chat.jar" puis Add External Jars --> selectionner "Chat.jar" à la racine de
+		notre dossier.
 		
 	* en localhost :
 		- Dans launchChatSystem.java (default package) :

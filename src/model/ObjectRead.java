@@ -16,7 +16,6 @@ public class ObjectRead extends Observable{
 		this.message.setData(text);
 		this.setChanged();
 		this.notifyObservers(this);
-		System.out.println("notifications aux "+this.countObservers()+" observers");
 	}
 	
 	public String getText(){

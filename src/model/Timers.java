@@ -12,7 +12,6 @@ public class Timers {
 	}
 	
 	public void launchTimer(String name, HelloReceptionThread hrt){
-		System.out.println(name+" lance");
 		Timer timer = new Timer();
 		TaskTimer taskTimer = new TaskTimer(name);
 		taskTimer.addObserver(hrt);
@@ -21,7 +20,6 @@ public class Timers {
 	}
 	
 	public void refreshTimer(String name, HelloReceptionThread hrt){
-		System.out.println(name+" raffraichi");
 		Timer timer = timers.get(name);
 		timer.cancel();
 		timer.purge();
@@ -33,7 +31,6 @@ public class Timers {
 	}
 	
 	public void deleteTimer(String name){
-		System.out.println(name+" stoppe");
 		Timer timer = timers.remove(name);
 		timer.cancel();
 		timer.purge();

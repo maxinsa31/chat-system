@@ -58,12 +58,10 @@ public class CommunicationSocket extends Thread{
 					message = (Message) iS.readObject();
 
 					if(message == null){ /* fermeture de connexion du remote host */
-						System.out.println("(CommunicationSocket) deconnexion detectee");
 						execute = false;
 					}
 					else{
 						objRead.setText(message.getData());
-						System.out.println("lecture effectuée");
 					}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -72,7 +70,6 @@ public class CommunicationSocket extends Thread{
 			socket.close();
 		} catch (IOException e) {
 		}
-		System.out.println("(CommunicationSocket) remoteIP="+remoteIpAddress+" socket ferme !");
 	}
 	
 	public InetAddress getRemoteIpAddress(){

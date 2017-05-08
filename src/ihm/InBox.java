@@ -25,7 +25,6 @@ public class InBox extends JFrame implements WindowListener, java.util.Observer{
 	private String conv= "";
 	
 	public InBox(String title, boolean affiche){
-		System.out.println("Creation InBox");
 		bSend = new JButton("Send");
 		discussion = new JTextArea(10, 40);
 		textToSend = new JTextArea(3,30);
@@ -71,7 +70,6 @@ public class InBox extends JFrame implements WindowListener, java.util.Observer{
 	}
 	
 	public void update(Observable o, Object arg) {
-		System.out.println("(InBox) update execute ");
 		if(arg instanceof ObjectRead){
 			if(conv.equals("")){
 				this.conv = this.title+" : "+((ObjectRead) arg).getText();

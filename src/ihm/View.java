@@ -23,7 +23,7 @@ public class View {
 	public void connection(){
 		/* on cache la fenetre de connexion */
 		this.cW.setVisible(false);
-		/* on créé une nouvelle fenetre avec la liste d'utilisateurs */
+		/* on crï¿½ï¿½ une nouvelle fenetre avec la liste d'utilisateurs */
 		this.uW = new UsersWindow();
 	}
 	
@@ -36,9 +36,7 @@ public class View {
 	
 	public InBox openConversation(){
 		InBox i = findConversation((String)uW.getjList().getSelectedValue());
-		System.out.println("(View) openConversation, valeur selectionnee="+(String)uW.getjList().getSelectedValue());
 		if( i == null ){ 
-			System.out.println("(View) openConversation");
 			InBox created = new InBox((String)uW.getjList().getSelectedValue(),true);
 			inBoxList.add(created);
 			return created;
@@ -59,7 +57,6 @@ public class View {
 	}
 	
 	public InBox createConversation(String title){
-		System.out.println("(View) createConversation");
 		InBox i = new InBox(title,false);
 		inBoxList.add(i);
 		return i;
@@ -71,7 +68,7 @@ public class View {
 	
 	public GroupBox openGroupConversation(){
 		
-		if(this.groupSelectionWindow.possibleToCreate()){ /* si au moins 2 utilisateurs ont été selectionnes */
+		if(this.groupSelectionWindow.possibleToCreate()){ /* si au moins 2 utilisateurs ont ï¿½tï¿½ selectionnes */
 			
 			/* fermeture de la fenetre de selection des membres */
 			this.groupSelectionWindow.dispose();
@@ -97,7 +94,7 @@ public class View {
 			}
 			
 		} else{
-			// TODO : ouverture d'une fenetre d'erreur pour indiquer que le nombre de destinataires doit etre superieur à 2 
+			// TODO : ouverture d'une fenetre d'erreur pour indiquer que le nombre de destinataires doit etre superieur ï¿½ 2 
 			return null;
 		}
 		

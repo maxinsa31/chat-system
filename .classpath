@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="D:/DocumentsMaxime/INSA/4A/S2/POO/Code_POO2/ChatSystem/chat.jar"/>
+	<classpathentry kind="lib" path="/home/lionel/git/chat-system/chat.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

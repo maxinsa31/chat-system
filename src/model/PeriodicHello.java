@@ -50,7 +50,7 @@ public class PeriodicHello extends Thread {
 	
 	
 	public void run(){
-		/* boucle tant que la variable 'execute' n'est pas modifiée par la classe UsersWindow */
+		/* boucle tant que la variable 'execute' n'est pas modifiï¿½e par la classe UsersWindow */
 		while(execute){
 			sendMyObject(hello);
 			//System.out.println("Message je suis connecte");
@@ -60,8 +60,8 @@ public class PeriodicHello extends Thread {
 				e.printStackTrace();
 			}
 		}
-		/* thread arrêté car click sur le bouton 'deconnection'
-		 * 		-> il faut donc envoyer un message d'indication de déconnexion
+		/* thread arrï¿½tï¿½ car click sur le bouton 'deconnection'
+		 * 		-> il faut donc envoyer un message d'indication de dï¿½connexion
 		 */
 		MessageUser goodBye = new MessageUser(this.login,this.myIp, this.myServerPort, MessageUser.typeConnect.DECONNECTED);
 		sendMyObject(goodBye);
